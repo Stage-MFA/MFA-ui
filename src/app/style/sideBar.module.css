@@ -1,0 +1,111 @@
+.sidebar {
+  width: 250px;
+  height: 100vh;
+  background: linear-gradient(135deg, #bbf7d0, #fff 50%, #fecaca 100%);
+  color: #15803d;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 2px 0 12px #bbf7d044;
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 10;
+}
+
+.logoBlock {
+  padding: 2rem 1.5rem 1rem 1.5rem;
+  border-bottom: 1px solid #22c55e22;
+  text-align: center;
+}
+
+.logoImg {
+  width: 80px;
+  height: 80px;
+  object-fit: contain;
+  margin: 0 auto 0.5rem auto;
+  border-radius: 50%;
+}
+
+.status {
+  display: inline-block;
+  background: linear-gradient(90deg, #22c55e 70%, #6b7280 100%);
+  color: #fff;
+  font-weight: 600;
+  font-size: 0.95rem;
+  border-radius: 999px;
+  padding: 0.25rem 1.1rem;
+  margin-top: 0.5rem;
+  box-shadow: 0 1px 4px #22c55e33;
+}
+
+.menuNav {
+  flex: 1;
+  padding: 1.5rem 0;
+  overflow-y: auto;
+}
+
+.menuList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.menuItem,
+.menuItemSub {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.9rem 2rem;
+  cursor: pointer;
+  border-left: 4px solid transparent;
+  transition: background 0.2s, border-color 0.2s;
+  font-weight: 600;
+  font-size: 1.05rem;
+  background: transparent;
+}
+
+.menuItem:hover,
+.menuItemSub:hover {
+  background: #bbf7d044;
+}
+
+.menuItemSubList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.menuItemSub {
+  gap: 0.8rem;
+  padding: 0.7rem 2.5rem;
+  font-size: 0.98rem;
+  color: #15803d;
+  background: transparent;
+}
+
+.menuItemSub:hover {
+  background: #bbf7d022;
+}
+
+.arrow {
+  margin-left: auto;
+  font-size: 1rem;
+}
+
+.footer {
+  padding: 1.5rem 2rem;
+  border-top: 1px solid #22c55e22;
+}
+
+.logoutBtn {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  background: none;
+  border: none;
+  color: #15803d;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  padding: 0;
+}

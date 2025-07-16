@@ -1,0 +1,52 @@
+.root {
+  padding: 2rem;
+  width: 100%;
+  box-sizing: border-box;
+  background-color: #f9fafb;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+}
+
+.chartContainer {
+  background: #fff;
+  border-radius: 1rem;
+  padding: 1rem;
+  box-shadow: 0 2px 8px #2563eb11;
+  height: 280px;
+}
+
+.chartTitle {
+  font-size: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.chartContent {
+  height: 200px;
+}
+
+.card {
+  background: #fff;
+  border-radius: 1rem;
+  padding: 1rem;
+  box-shadow: 0 2px 8px #2563eb11;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 150px;
+}
+
+.cardTitle {
+  font-size: 1rem;
+  color: #6b7280;
+}
+
+.cardValue {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #ef4444;
+}
