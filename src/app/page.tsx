@@ -51,6 +51,7 @@ export default function Home() {
 
       Cookies.set('accessToken', result.accessToken, { expires: 1 });
       Cookies.set('refreshToken', result.refreshToken, { expires: 7 });
+      Cookies.set('user',data.email, { expires: 1 });
 
       router.push(`${BASE_URL_FRONTEND}/admin-ministere`);
     } catch (error) {

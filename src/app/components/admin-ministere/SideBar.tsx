@@ -25,7 +25,7 @@ const SideBar: React.FC = () => {
           className={styles.logoImg}
         />
         <div className={styles.status}>
-          Ministère Intérieur
+          Ministère Force Armée
         </div>
       </div>
 
