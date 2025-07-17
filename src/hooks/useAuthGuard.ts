@@ -13,7 +13,7 @@ export function useAuthGuard() {
     } else {
       setLoading(false);
     }
-  },[router]);
+  }, [router]);
 
   return loading;
 }
