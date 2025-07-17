@@ -37,16 +37,6 @@ const ChartContainer: React.FC<{
   </div>
 );
 
-const Card: React.FC<{ title: string; value: string | number }> = ({
-  title,
-  value,
-}) => (
-  <div className={styles.card}>
-    <h3 className={styles.cardTitle}>{title}</h3>
-    <p className={styles.cardValue}>{value}</p>
-  </div>
-);
-
 const Dashboard: React.FC = () => {
   const populationTotale = {
     labels: ["2021", "2022", "2023", "2024"],

@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { FiUser, FiSearch } from "react-icons/fi";
+import { FiUser} from "react-icons/fi";
 import styles from "@/app/style/Navbar.module.css";
 
 interface NavbarProps {

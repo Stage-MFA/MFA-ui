@@ -8,6 +8,7 @@ import { useRouter } from "next/navigation";
 import Cookies from "js-cookie";
 import { BASE_URL_FRONTEND, BASE_URL_API } from "@/lib/constants";
 import { Eye, EyeOff } from "lucide-react";
+import Image from "next/image";
 
 const formSchema = z.object({
   email: z.string().email("Email invalide"),
@@ -69,7 +70,7 @@ export default function Home() {
       <div className={styles.leftBlock}>
         <h2 className={styles.title}>Plateforme pour MFA</h2>
         <div className={styles.imageContainer}>
-          <img
+          <Image
             src="/population.png"
             alt="Population"
             className={styles.populationImage}
@@ -86,7 +87,7 @@ export default function Home() {
 
       <div className={styles.rightBlock}>
         <div className={styles.formContainer}>
-          <img
+          <Image
             alt="Logo Ministère"
             src="./MAF_logo-removebg-preview.png"
             className={styles.logo}

@@ -5,6 +5,7 @@ import { FaHome, FaSignOutAlt } from "react-icons/fa";
 import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
 import { BASE_URL_FRONTEND } from "@/lib/constants";
+import Image from "next/image";
 
 const SideBar: React.FC = () => {
   const router = useRouter();
@@ -20,7 +21,7 @@ const SideBar: React.FC = () => {
   return (
     <aside className={styles.sidebar}>
       <div className={styles.logoBlock}>
-        <img src="/MAF logo.jpg" alt="Logo " className={styles.logoImg} />
+        <Image src="/MAF logo.jpg" alt="Logo " className={styles.logoImg} />
         <div className={styles.status}>Ministère Force Armée</div>
       </div>
 
