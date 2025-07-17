@@ -111,3 +111,8 @@
   cursor: pointer;
   padding: 0;
 }
+.active {
+  background-color: #bbf7d0;
+  border-left: 4px solid #15803d;
+  color: #065f46;
+}

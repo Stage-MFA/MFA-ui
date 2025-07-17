@@ -1,20 +1,22 @@
 "use client";
 import React from "react";
 import styles from "@/app/Style/sideBar.module.css";
-import { FaHome, FaSignOutAlt } from "react-icons/fa";
+import { FaHome, FaSignOutAlt, FaTools } from "react-icons/fa";
 import Cookies from "js-cookie";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import { BASE_URL_FRONTEND } from "@/lib/constants";
 import Image from "next/image";
+import Link from "next/link";
+import clsx from "clsx";
 
 const SideBar: React.FC = () => {
   const router = useRouter();
+  const pathname = usePathname();
 
   const handleLogout = () => {
     Cookies.remove("accessToken");
     Cookies.remove("refreshToken");
     Cookies.remove("user");
-
     router.push(`${BASE_URL_FRONTEND}`);
   };
 
@@ -23,7 +25,7 @@ const SideBar: React.FC = () => {
       <div className={styles.logoBlock}>
         <Image
           src="/MAF logo.jpg"
-          alt="Logo "
+          alt="Logo"
           height={600}
           width={600}
           className={styles.logoImg}
@@ -33,11 +35,27 @@ const SideBar: React.FC = () => {
 
       <nav className={styles.menuNav}>
         <ul className={styles.menuList}>
-          <li className={styles.menuItem}>
-            <span style={{ fontSize: "1.2rem" }}>
+          <li>
+            <Link
+              href="/admin-ministere"
+              className={clsx(styles.menuItem, {
+                [styles.active]: pathname === "/admin-ministere",
+              })}
+            >
               <FaHome />
-            </span>
-            <span>Dashboard</span>
+              <span>Dashboard</span>
+            </Link>
+          </li>
+          <li>
+            <Link
+              href="/admin-ministere/service"
+              className={clsx(styles.menuItem, {
+                [styles.active]: pathname === "/admin-ministere/service",
+              })}
+            >
+              <FaTools />
+              <span>Service</span>
+            </Link>
           </li>
         </ul>
       </nav>
