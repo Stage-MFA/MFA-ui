@@ -21,7 +21,13 @@ const SideBar: React.FC = () => {
   return (
     <aside className={styles.sidebar}>
       <div className={styles.logoBlock}>
-        <Image src="/MAF logo.jpg" alt="Logo " className={styles.logoImg} />
+        <Image
+          src="/MAF logo.jpg"
+          alt="Logo "
+          height={600}
+          width={600}
+          className={styles.logoImg}
+        />
         <div className={styles.status}>Ministère Force Armée</div>
       </div>
 

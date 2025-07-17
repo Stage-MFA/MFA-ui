@@ -73,6 +73,8 @@ export default function Home() {
           <Image
             src="/population.png"
             alt="Population"
+            height={600}
+            width={600}
             className={styles.populationImage}
           />
           <h2 className={styles.madagascarTitle}>MADAGASCAR</h2>
@@ -89,7 +91,9 @@ export default function Home() {
         <div className={styles.formContainer}>
           <Image
             alt="Logo Ministère"
-            src="./MAF_logo-removebg-preview.png"
+            src="/MAF_logo-removebg-preview.png"
+            height={600}
+            width={600}
             className={styles.logo}
           />
           <h2 className={styles.formTitle}>Se connecter</h2>
