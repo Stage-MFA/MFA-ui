@@ -12,6 +12,7 @@ const SideBar: React.FC = () => {
   const handleLogout = () => {
     Cookies.remove("accessToken");
     Cookies.remove("refreshToken");
+    Cookies.remove("user")
 
     router.push(`${BASE_URL_FRONTEND}`);
   };
