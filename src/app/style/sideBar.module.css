@@ -58,7 +58,9 @@
   padding: 0.9rem 2rem;
   cursor: pointer;
   border-left: 4px solid transparent;
-  transition: background 0.2s, border-color 0.2s;
+  transition:
+    background 0.2s,
+    border-color 0.2s;
   font-weight: 600;
   font-size: 1.05rem;
   background: transparent;

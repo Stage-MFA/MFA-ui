@@ -1,17 +1,19 @@
 "use client";
-import styles from './style/page.module.css';
-import React, { useState } from 'react';
+import styles from "./style/page.module.css";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
-import Cookies from 'js-cookie';
+import Cookies from "js-cookie";
 import { BASE_URL_FRONTEND, BASE_URL_API } from "@/lib/constants";
-import { Eye, EyeOff } from 'lucide-react'; 
+import { Eye, EyeOff } from "lucide-react";
 
 const formSchema = z.object({
   email: z.string().email("Email invalide"),
-  password: z.string().min(6, "Le mot de passe doit contenir au moins 6 caractères"),
+  password: z
+    .string()
+    .min(6, "Le mot de passe doit contenir au moins 6 caractères"),
 });
 
 type FormValues = z.infer<typeof formSchema>;
@@ -49,9 +51,9 @@ export default function Home() {
         throw new Error("Token manquant dans la réponse");
       }
 
-      Cookies.set('accessToken', result.accessToken, { expires: 1 });
-      Cookies.set('refreshToken', result.refreshToken, { expires: 7 });
-      Cookies.set('user',data.email, { expires: 1 });
+      Cookies.set("accessToken", result.accessToken, { expires: 1 });
+      Cookies.set("refreshToken", result.refreshToken, { expires: 7 });
+      Cookies.set("user", data.email, { expires: 1 });
 
       router.push(`${BASE_URL_FRONTEND}/admin-ministere`);
     } catch (error) {
@@ -95,7 +97,9 @@ export default function Home() {
         <div className={styles.formSection}>
           <form onSubmit={handleSubmit(onSubmit)} className={styles.form}>
             <div>
-              <label htmlFor="email" className={styles.label}>Email</label>
+              <label htmlFor="email" className={styles.label}>
+                Email
+              </label>
               <div className={styles.inputGroup}>
                 <input
                   id="email"
@@ -111,11 +115,24 @@ export default function Home() {
             </div>
 
             <div>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <label htmlFor="password" className={styles.label}>Mot de passe</label>
-                <a href="#" className={styles.forgotLink}>Mot de passe oublié ?</a>
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                }}
+              >
+                <label htmlFor="password" className={styles.label}>
+                  Mot de passe
+                </label>
+                <a href="#" className={styles.forgotLink}>
+                  Mot de passe oublié ?
+                </a>
               </div>
-              <div className={styles.inputGroup} style={{ position: 'relative' }}>
+              <div
+                className={styles.inputGroup}
+                style={{ position: "relative" }}
+              >
                 <input
                   id="password"
                   type={showPassword ? "text" : "password"}
@@ -127,13 +144,13 @@ export default function Home() {
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
                   style={{
-                    position: 'absolute',
+                    position: "absolute",
                     right: 10,
-                    top: '50%',
-                    transform: 'translateY(-50%)',
-                    background: 'none',
-                    border: 'none',
-                    cursor: 'pointer',
+                    top: "50%",
+                    transform: "translateY(-50%)",
+                    background: "none",
+                    border: "none",
+                    cursor: "pointer",
                   }}
                 >
                   {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
@@ -150,11 +167,12 @@ export default function Home() {
                 className={styles.button}
                 disabled={isLoading}
               >
-                {isLoading ? "Connexion" + ".".repeat((Date.now() / 300) % 4 | 0) : "Se connecter"}
+                {isLoading
+                  ? "Connexion" + ".".repeat((Date.now() / 300) % 4 | 0)
+                  : "Se connecter"}
               </button>
             </div>
           </form>
-
         </div>
       </div>
     </div>
