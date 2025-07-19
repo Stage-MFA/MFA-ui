@@ -130,7 +130,10 @@ export default function Home() {
                 <label htmlFor="password" className={styles.label}>
                   Mot de passe
                 </label>
-                <a href="#" className={styles.forgotLink}>
+                <a
+                  href={`${BASE_URL_FRONTEND}/user/email`}
+                  className={styles.forgotLink}
+                >
                   Mot de passe oublié ?
                 </a>
               </div>
