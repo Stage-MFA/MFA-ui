@@ -13,7 +13,6 @@ type User = {
   roleResDto: Role[];
 };
 
-
 async function getUsers() {
   const res = await fetch(`${BASE_URL_API}/users`, {
     method: "GET",
