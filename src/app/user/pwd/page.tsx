@@ -82,22 +82,29 @@ export default function PasswordPage() {
   }
   return (
     <div className={styles.container}>
+      <div className={styles.logoCorner}>
+        <Image
+          src="/mfa.png"
+          alt="Logo entreprise"
+          width={50}
+          height={50}
+          className={styles.roundLogo}
+        />
+      </div>
       <div className={styles.leftBlock}>
-        <h2 className={styles.title}>Plateforme pour MFA</h2>
+        <h2 className={styles.title}>Gestion de la maintenance </h2>
         <div className={styles.imageContainer}>
           <Image
-            src="/population.png"
-            alt="Population"
+            src="/materiel2.png"
+            alt="Materiel"
             height={600}
             width={600}
             className={styles.populationImage}
           />
-          <h2 className={styles.madagascarTitle}>MADAGASCAR</h2>
-          <span className={styles.status}>● En ligne</span>
         </div>
         <div className={styles.welcome}>
           <span className={styles.welcomeText}>
-            Bienvenue sur la plateforme nationale de MFA
+            Ministère des Forces Armées
           </span>
         </div>
       </div>
@@ -106,7 +113,7 @@ export default function PasswordPage() {
         <div className={styles.formContainer}>
           <Image
             alt="Logo Ministère"
-            src="/MAF_logo-removebg-preview.png"
+            src="/materiel3.png"
             height={600}
             width={600}
             className={styles.logo}
