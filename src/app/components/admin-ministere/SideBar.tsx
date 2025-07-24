@@ -1,17 +1,20 @@
 "use client";
 import React from "react";
 import styles from "@/app/Style/sideBar.module.css";
-import { FaHome, FaSignOutAlt, FaTools } from "react-icons/fa";
+import { FaHome, FaSignOutAlt } from "react-icons/fa";
+import { FiUser } from "react-icons/fi";
 import Cookies from "js-cookie";
 import { useRouter, usePathname } from "next/navigation";
 import { BASE_URL_FRONTEND } from "@/lib/constants";
 import Image from "next/image";
 import Link from "next/link";
 import clsx from "clsx";
+import { useIsAdmin } from "@/hooks/useIsAdmin";
 
 const SideBar: React.FC = () => {
   const router = useRouter();
   const pathname = usePathname();
+  const { isAdmin, loading } = useIsAdmin();
 
   const handleLogout = () => {
     Cookies.remove("accessToken");
@@ -46,17 +49,19 @@ const SideBar: React.FC = () => {
               <span>Dashboard</span>
             </Link>
           </li>
-          <li>
-            <Link
-              href="/admin-ministere/service"
-              className={clsx(styles.menuItem, {
-                [styles.active]: pathname === "/admin-ministere/service",
-              })}
-            >
-              <FaTools />
-              <span>Service</span>
-            </Link>
-          </li>
+          {!loading && isAdmin && (
+            <li>
+              <Link
+                href="/admin-ministere/user"
+                className={clsx(styles.menuItem, {
+                  [styles.active]: pathname === "/admin-ministere/user",
+                })}
+              >
+                <FiUser />
+                <span>User</span>
+              </Link>
+            </li>
+          )}
         </ul>
       </nav>
 
