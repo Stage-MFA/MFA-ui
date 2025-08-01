@@ -101,6 +101,7 @@ export default function UpdateRoleUser() {
             <option value="">-- Sélectionner un rôle --</option>
             <option value="ADMIN">Administrateur</option>
             <option value="USER">Utilisateur</option>
+            <option value="TECHNICIAN">Technicien</option>
           </select>
           {errors.role && <p className={styles.error}>{errors.role.message}</p>}
 

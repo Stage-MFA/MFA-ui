@@ -13,6 +13,23 @@
   box-sizing: border-box;
 }
 
+.passwordWrapper {
+  position: relative;
+}
+
+.passwordInput {
+  padding-right: 40px;
+}
+
+.eyeIcon {
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
+  cursor: pointer;
+  color: #666;
+}
+
 .formContainer {
   background: white;
   padding: 1rem 1.5rem;
@@ -120,10 +137,16 @@
   border-radius: 0.5rem;
   font-size: 1rem;
   transition: background-color 0.25s ease;
-  width: 100%;
+  max-width: 200px;
   background-color: #1ea851;
   color: white;
   margin-top: 0.5rem;
+}
+
+.buttonContainer {
+  display: flex;
+  justify-content: center;
+  margin-top: 1rem;
 }
 
 .button:hover:not(:disabled) {

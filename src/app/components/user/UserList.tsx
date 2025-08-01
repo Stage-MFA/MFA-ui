@@ -16,6 +16,9 @@ type User = {
   firstname: string;
   lastname: string;
   email: string;
+  direction: string;
+  speciality: string;
+  role: string;
   roleResDto: Role[];
 };
 
@@ -75,6 +78,8 @@ export default function Users() {
             <tr>
               <th className={styles.th}>Nom</th>
               <th className={styles.th}>Email</th>
+              <th className={styles.th}>Direction</th>
+              <th className={styles.th}>Spécialité</th>
               <th className={styles.th}>Rôles</th>
               <th className={styles.th}>Actions</th>
             </tr>
@@ -86,6 +91,8 @@ export default function Users() {
                   {user.firstname} {user.lastname}
                 </td>
                 <td className={styles.td}>{user.email}</td>
+                <td className={styles.td}>{user.direction}</td>
+                <td className={styles.td}>{user.speciality}</td>
                 <td className={styles.td}>
                   {user.roleResDto.map((role) => (
                     <span key={role.id} className={styles.roleTag}>
