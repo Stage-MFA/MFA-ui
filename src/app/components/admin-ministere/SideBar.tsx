@@ -9,17 +9,16 @@ import { BASE_URL_FRONTEND } from "@/lib/constants";
 import Image from "next/image";
 import Link from "next/link";
 import clsx from "clsx";
-import { useIsAdmin } from "@/hooks/useIsAdmin";
 
 const SideBar: React.FC = () => {
   const router = useRouter();
   const pathname = usePathname();
-  const { isAdmin, loading } = useIsAdmin();
 
   const handleLogout = () => {
     Cookies.remove("accessToken");
     Cookies.remove("refreshToken");
     Cookies.remove("user");
+    Cookies.remove("role");
     router.push(`${BASE_URL_FRONTEND}`);
   };
 
@@ -49,19 +48,17 @@ const SideBar: React.FC = () => {
               <span>Dashboard</span>
             </Link>
           </li>
-          {!loading && isAdmin && (
-            <li>
-              <Link
-                href="/admin-ministere/user"
-                className={clsx(styles.menuItem, {
-                  [styles.active]: pathname === "/admin-ministere/user",
-                })}
-              >
-                <FiUser />
-                <span>User</span>
-              </Link>
-            </li>
-          )}
+          <li>
+            <Link
+              href="/admin-ministere/user"
+              className={clsx(styles.menuItem, {
+                [styles.active]: pathname === "/admin-ministere/user",
+              })}
+            >
+              <FiUser />
+              <span>User</span>
+            </Link>
+          </li>
         </ul>
       </nav>
 

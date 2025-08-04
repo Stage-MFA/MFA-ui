@@ -55,8 +55,27 @@ export default function Home() {
       Cookies.set("accessToken", result.accessToken, { expires: 1 });
       Cookies.set("refreshToken", result.refreshToken, { expires: 7 });
       Cookies.set("user", data.email, { expires: 1 });
+      Cookies.set("role", result.roles, { expires: 1 });
 
-      router.push(`${BASE_URL_FRONTEND}/admin-ministere`);
+      if (!result.roles) {
+        alert("Aucun rôle attribué. Veuillez contacter l'administrateur.");
+        return;
+      }
+
+      switch (result.roles) {
+        case "ADMIN":
+          router.push(`${BASE_URL_FRONTEND}/admin-ministere`);
+          break;
+        case "USER":
+          router.push(`${BASE_URL_FRONTEND}/user-ministere`);
+          break;
+        case "TECHNICIAN":
+          router.push(`${BASE_URL_FRONTEND}/technicien-ministere`);
+          break;
+        default:
+          alert("Rôle inconnu. Veuillez contacter l'administrateur.");
+          break;
+      }
     } catch (error) {
       console.error("Erreur lors de la connexion :", error);
       alert("Email ou mot de passe incorrect.");

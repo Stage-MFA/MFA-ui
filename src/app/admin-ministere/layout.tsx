@@ -1,22 +1,20 @@
 "use client";
 import SideBar from "../components/admin-ministere/SideBar";
 import styles from "@/app/style/adminLayout.module.css";
-import { useAuthGuard } from "@/hooks/useAuthGuard";
 import Navbar from "../components/admin-ministere/NavBar";
 import Cookies from "js-cookie";
+import { useIsAdmin } from "@/hooks/useIsAdmin";
 
 export default function AdminLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const loading = useAuthGuard();
   const userName = Cookies.get("user");
-
-  if (loading) {
-    return <div className={styles.loading}></div>;
+  const { isVerifying } = useIsAdmin();
+  if (isVerifying) {
+    return <div></div>;
   }
-
   return (
     <div className={styles.layoutContainer}>
       <SideBar />
