@@ -1,18 +1,22 @@
 "use client";
-import React from "react";
+
+import React, { useEffect, useState } from "react";
 import styles from "@/app/Style/sideBar.module.css";
 import { FaHome, FaSignOutAlt } from "react-icons/fa";
-import { FiUser } from "react-icons/fi";
+import { FiUser, FiSend } from "react-icons/fi";
 import Cookies from "js-cookie";
 import { useRouter, usePathname } from "next/navigation";
 import { BASE_URL_FRONTEND } from "@/lib/constants";
 import Image from "next/image";
 import Link from "next/link";
 import clsx from "clsx";
+import { getUsersWithoutRoleCount } from "@/lib/invitation";
 
 const SideBar: React.FC = () => {
   const router = useRouter();
   const pathname = usePathname();
+
+  const [invitationCount, setInvitationCount] = useState(0);
 
   const handleLogout = () => {
     Cookies.remove("accessToken");
@@ -21,6 +25,17 @@ const SideBar: React.FC = () => {
     Cookies.remove("role");
     router.push(`${BASE_URL_FRONTEND}`);
   };
+
+  useEffect(() => {
+    const fetchCount = () => {
+      getUsersWithoutRoleCount().then(setInvitationCount).catch(console.error);
+    };
+
+    fetchCount();
+    const interval = setInterval(fetchCount, 500);
+
+    return () => clearInterval(interval);
+  }, []);
 
   return (
     <aside className={styles.sidebar}>
@@ -57,6 +72,20 @@ const SideBar: React.FC = () => {
             >
               <FiUser />
               <span>User</span>
+            </Link>
+          </li>
+          <li>
+            <Link
+              href="/admin-ministere/invitation"
+              className={clsx(styles.menuItem, {
+                [styles.active]: pathname === "/admin-ministere/invitation",
+              })}
+            >
+              <FiSend />
+              <span>Invitation</span>
+              {invitationCount > 0 && (
+                <span className={styles.badge}>{invitationCount}</span>
+              )}
             </Link>
           </li>
         </ul>
