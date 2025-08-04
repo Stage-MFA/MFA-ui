@@ -5,10 +5,11 @@ import { useRouter } from "next/navigation";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { BASE_URL_API } from "@/lib/constants";
+import { BASE_URL_API, BASE_URL_FRONTEND } from "@/lib/constants";
 import styles from "@/app/style/createUser.module.css";
 import Image from "next/image";
 import { FaArrowLeft } from "react-icons/fa";
+
 import {
   Direction,
   fetchDirections,
@@ -35,7 +36,7 @@ const formSchema = z.object({
 
 type FormValues = z.infer<typeof formSchema>;
 
-export default function CreateUser() {
+export default function Inscription() {
   const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -89,7 +90,7 @@ export default function CreateUser() {
       }
 
       alert("Utilisateur créé avec succès");
-      router.push("/admin-ministere/user");
+      router.push(`${BASE_URL_FRONTEND}`);
     } catch (error) {
       console.error("Erreur :", error);
       alert("Erreur lors de la création de l'utilisateur");
@@ -216,7 +217,7 @@ export default function CreateUser() {
               disabled={isLoading}
               className={styles.button}
             >
-              {isLoading ? "Chargement..." : "Créer l'utilisateur"}
+              {isLoading ? "Chargement..." : "S'inscrire"}
             </button>
           </div>
         </form>

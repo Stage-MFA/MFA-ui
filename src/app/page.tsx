@@ -195,6 +195,18 @@ export default function Home() {
               )}
             </div>
 
+            <div>
+              <label htmlFor="password" className={styles.label}>
+                Inscription
+              </label>
+              <a
+                href={`${BASE_URL_FRONTEND}/inscription`}
+                className={styles.forgotLink}
+              >
+                inscrivez-vous ici !
+              </a>
+            </div>
+
             <div className={styles.buttonGroup}>
               <button
                 type="submit"
