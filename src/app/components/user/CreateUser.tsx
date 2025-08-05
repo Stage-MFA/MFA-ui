@@ -89,6 +89,7 @@ export default function CreateUser() {
       }
 
       alert("Utilisateur créé avec succès");
+      window.dispatchEvent(new Event("refreshInvitationCount"));
       router.push("/admin-ministere/user");
     } catch (error) {
       console.error("Erreur :", error);

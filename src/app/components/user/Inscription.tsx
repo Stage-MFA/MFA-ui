@@ -90,6 +90,7 @@ export default function Inscription() {
       }
 
       alert("Utilisateur créé avec succès");
+      window.dispatchEvent(new Event("refreshInvitationCount"));
       router.push(`${BASE_URL_FRONTEND}`);
     } catch (error) {
       console.error("Erreur :", error);

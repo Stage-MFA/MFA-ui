@@ -100,6 +100,7 @@ export default function UsersWithoutRole({
             prevUsers.filter((user) => user.id !== userId),
           );
           Swal.fire("Supprimé !", "L'utilisateur a été supprimé.", "success");
+          window.dispatchEvent(new Event("refreshInvitationCount"));
         } else {
           throw new Error("Échec de la suppression de l'utilisateur.");
         }
@@ -201,9 +202,7 @@ export default function UsersWithoutRole({
           <button
             key={index}
             onClick={() => handlePageChange(index + 1)}
-            className={`${styles.pageButton} ${
-              currentPage === index + 1 ? styles.activePage : ""
-            }`}
+            className={`${styles.pageButton} ${currentPage === index + 1 ? styles.activePage : ""}`}
           >
             {index + 1}
           </button>

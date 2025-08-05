@@ -26,11 +26,8 @@ type User = {
 export default function Users() {
   const [users, setUsers] = useState<User[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
+  const [searchTerm, setSearchTerm] = useState("");
   const itemsPerPage = 8;
-  const indexOfLastUser = currentPage * itemsPerPage;
-  const indexOfFirstUser = indexOfLastUser - itemsPerPage;
-  const currentUsers = users.slice(indexOfFirstUser, indexOfLastUser);
-  const totalPages = Math.ceil(users.length / itemsPerPage);
   const router = useRouter();
 
   useEffect(() => {
@@ -46,7 +43,6 @@ export default function Users() {
           throw new Error("Erreur lors du chargement des utilisateurs");
 
         const data: User[] = await res.json();
-
         const usersWithRoles = data.filter(
           (user) => user.roleResDto.length > 0,
         );
@@ -62,6 +58,7 @@ export default function Users() {
   const handleAddUser = () => {
     router.push("/admin-ministere/user/add");
   };
+
   const handleDelete = async (userId: number) => {
     const result = await Swal.fire({
       title: "Êtes-vous sûr ?",
@@ -85,6 +82,7 @@ export default function Users() {
             prevUsers.filter((user) => user.id !== userId),
           );
           Swal.fire("Supprimé !", "L'utilisateur a été supprimé.", "success");
+          window.dispatchEvent(new Event("refreshInvitationCount"));
         } else {
           throw new Error("Échec de la suppression de l'utilisateur.");
         }
@@ -95,6 +93,17 @@ export default function Users() {
     }
   };
 
+  const filteredUsers = users.filter((user) =>
+    `${user.firstname} ${user.lastname} ${user.email} ${user.direction} ${user.speciality}`
+      .toLowerCase()
+      .includes(searchTerm.toLowerCase()),
+  );
+
+  const totalPages = Math.ceil(filteredUsers.length / itemsPerPage);
+  const indexOfLastUser = currentPage * itemsPerPage;
+  const indexOfFirstUser = indexOfLastUser - itemsPerPage;
+  const currentUsers = filteredUsers.slice(indexOfFirstUser, indexOfLastUser);
+
   const handlePageChange = (page: number) => {
     if (page >= 1 && page <= totalPages) {
       setCurrentPage(page);
@@ -104,6 +113,7 @@ export default function Users() {
   const handleEditRole = (email: string) => {
     router.push(`/admin-ministere/user/edit-role?email=${email}`);
   };
+
   return (
     <div className={styles.container}>
       <div className={styles.header}>
@@ -112,6 +122,11 @@ export default function Users() {
           <input
             type="text"
             placeholder="Rechercher..."
+            value={searchTerm}
+            onChange={(e) => {
+              setSearchTerm(e.target.value);
+              setCurrentPage(1);
+            }}
             className={styles.searchInput}
           />
         </div>
@@ -170,6 +185,7 @@ export default function Users() {
           </tbody>
         </table>
       </div>
+
       <div className={styles.pagination}>
         <button
           onClick={() => handlePageChange(currentPage - 1)}

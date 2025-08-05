@@ -27,14 +27,13 @@ const SideBar: React.FC = () => {
   };
 
   useEffect(() => {
-    const fetchCount = () => {
+    const handleRefreshCount = () => {
       getUsersWithoutRoleCount().then(setInvitationCount).catch(console.error);
     };
 
-    fetchCount();
-    const interval = setInterval(fetchCount, 500);
-
-    return () => clearInterval(interval);
+    window.addEventListener("refreshInvitationCount", handleRefreshCount);
+    return () =>
+      window.removeEventListener("refreshInvitationCount", handleRefreshCount);
   }, []);
 
   return (
