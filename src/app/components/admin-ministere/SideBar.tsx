@@ -5,24 +5,37 @@ import { FaHome, FaSignOutAlt } from "react-icons/fa";
 import { FiUser, FiSend } from "react-icons/fi";
 import Cookies from "js-cookie";
 import { useRouter, usePathname } from "next/navigation";
-import { BASE_URL_FRONTEND } from "@/lib/constants";
+import { BASE_URL_FRONTEND ,BASE_URL_API} from "@/lib/constants";
 import Image from "next/image";
 import Link from "next/link";
 import clsx from "clsx";
+import { useState ,useEffect} from "react";
+
 
 const SideBar: React.FC = () => {
   const router = useRouter();
   const pathname = usePathname();
-  const invitationCount = Cookies.get("invitationCount");
+  const [countNoRole , setCountNoRole] = useState<number>(0);
 
   const handleLogout = () => {
     Cookies.remove("accessToken");
     Cookies.remove("refreshToken");
     Cookies.remove("user");
     Cookies.remove("role");
-    Cookies.remove("invitationCount");
+    Cookies.remove("pwd");
     router.push(`${BASE_URL_FRONTEND}`);
   };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const response = await fetch(`${BASE_URL_API}/users/invitation`, {
+        method: "GET",
+      });
+      const data = await response.json();
+      setCountNoRole(data);
+    };
+    fetchData();
+  }, []);
 
   return (
     <aside className={styles.sidebar}>
@@ -70,8 +83,8 @@ const SideBar: React.FC = () => {
             >
               <FiSend />
               <span>Invitation</span>
-              {invitationCount && Number(invitationCount) > 0 && (
-                <span className={styles.badge}>{invitationCount}</span>
+              {countNoRole > 0 && (
+                <span className={styles.badge}>{countNoRole}</span>
               )}
             </Link>
           </li>

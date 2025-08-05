@@ -19,7 +19,7 @@ import {
 } from "@/app/components/speciality/SpecialityService";
 import { Eye, EyeOff } from "lucide-react";
 import Cookies from "js-cookie";
-import { getUsersWithoutRoleCount } from "@/lib/invitation";
+
 
 const formSchema = z.object({
   firstname: z.string().min(1, "Le prénom est requis"),
@@ -90,12 +90,7 @@ export default function CreateUser() {
         throw new Error("Échec de la création de l'utilisateur");
       }
 
-      alert("Utilisateur créé avec succès");
-      Cookies.set("invitationCount", String(await getUsersWithoutRoleCount()), {
-        expires: 1,
-      });
       router.push("/admin-ministere/user");
-      router.refresh();
     } catch (error) {
       console.error("Erreur :", error);
       alert("Erreur lors de la création de l'utilisateur");

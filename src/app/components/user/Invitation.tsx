@@ -6,8 +6,7 @@ import { BASE_URL_API } from "@/lib/constants";
 import { FiEdit, FiTrash2, FiSearch } from "react-icons/fi";
 import styles from "@/app/style/user.module.css";
 import Swal from "sweetalert2";
-import Cookies from "js-cookie";
-import { getUsersWithoutRoleCount } from "@/lib/invitation";
+
 
 type Role = {
   id: number;
@@ -100,11 +99,6 @@ export default function UsersWithoutRole({
         if (res.ok) {
           setUsers((prevUsers) =>
             prevUsers.filter((user) => user.id !== userId),
-          );
-          Cookies.set(
-            "invitationCount",
-            String(await getUsersWithoutRoleCount()),
-            { expires: 1 },
           );
           Swal.fire("Supprimé !", "L'utilisateur a été supprimé.", "success");
           router.refresh();
