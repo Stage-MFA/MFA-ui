@@ -82,7 +82,6 @@ export default function Users() {
             prevUsers.filter((user) => user.id !== userId),
           );
           Swal.fire("Supprimé !", "L'utilisateur a été supprimé.", "success");
-          window.dispatchEvent(new Event("refreshInvitationCount"));
         } else {
           throw new Error("Échec de la suppression de l'utilisateur.");
         }

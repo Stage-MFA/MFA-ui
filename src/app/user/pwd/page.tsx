@@ -9,7 +9,6 @@ import Cookies from "js-cookie";
 import { BASE_URL_FRONTEND, BASE_URL_API } from "@/lib/constants";
 import { Eye, EyeOff } from "lucide-react";
 import Image from "next/image";
-import { useAuthGuard } from "@/hooks/useAuthGuard";
 
 const passwordSchema = z
   .object({
@@ -28,7 +27,6 @@ export default function PasswordPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const loading = useAuthGuard();
 
   const {
     register,
@@ -77,9 +75,6 @@ export default function PasswordPage() {
     }
   };
 
-  if (loading) {
-    return <div className={styles.loading}></div>;
-  }
   return (
     <div className={styles.container}>
       <div className={styles.logoCorner}>

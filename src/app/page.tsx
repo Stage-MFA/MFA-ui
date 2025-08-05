@@ -9,6 +9,7 @@ import Cookies from "js-cookie";
 import { BASE_URL_FRONTEND, BASE_URL_API } from "@/lib/constants";
 import { Eye, EyeOff } from "lucide-react";
 import Image from "next/image";
+import { getUsersWithoutRoleCount } from "@/lib/invitation";
 
 const formSchema = z.object({
   email: z.string().email("Email invalide"),
@@ -56,6 +57,9 @@ export default function Home() {
       Cookies.set("refreshToken", result.refreshToken, { expires: 7 });
       Cookies.set("user", data.email, { expires: 1 });
       Cookies.set("role", result.roles, { expires: 1 });
+      Cookies.set("invitationCount", String(await getUsersWithoutRoleCount()), {
+        expires: 1,
+      });
 
       if (!result.roles) {
         alert("Aucun rôle attribué. Veuillez contacter l'administrateur.");

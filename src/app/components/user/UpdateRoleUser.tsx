@@ -9,6 +9,8 @@ import { BASE_URL_API, BASE_URL_FRONTEND } from "@/lib/constants";
 import { useRouter } from "next/navigation";
 import styles from "@/app/style/updateRoleUser.module.css";
 import { FiArrowLeft } from "react-icons/fi";
+import Cookies from "js-cookie";
+import { getUsersWithoutRoleCount } from "@/lib/invitation";
 
 const formSchema = z.object({
   role: z.string().min(1, "Le rôle est requis"),
@@ -47,7 +49,11 @@ export default function UpdateRoleUser() {
 
       if (!response.ok)
         throw new Error("Erreur lors de la mise à jour du rôle.");
+      Cookies.set("invitationCount", String(await getUsersWithoutRoleCount()), {
+        expires: 1,
+      });
       router.push(`${BASE_URL_FRONTEND}/admin-ministere/user`);
+      router.refresh();
 
       alert("Rôle mis à jour avec succès !");
       reset();

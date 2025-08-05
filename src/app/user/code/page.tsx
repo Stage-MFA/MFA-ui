@@ -8,7 +8,6 @@ import { useRouter } from "next/navigation";
 import Cookies from "js-cookie";
 import { BASE_URL_FRONTEND } from "@/lib/constants";
 import Image from "next/image";
-import { useAuthGuard } from "@/hooks/useAuthGuard";
 
 const codeSchema = z.object({
   code: z
@@ -21,7 +20,6 @@ type FormValues = z.infer<typeof codeSchema>;
 
 export default function CodePage() {
   const router = useRouter();
-  const loading = useAuthGuard();
   const [isLoading, setIsLoading] = useState(false);
 
   const codeNow = Cookies.get("code");
@@ -56,10 +54,6 @@ export default function CodePage() {
       setIsLoading(false);
     }
   };
-
-  if (loading) {
-    return <div className={styles.loading}></div>;
-  }
 
   return (
     <div className={styles.container}>
