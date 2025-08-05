@@ -87,6 +87,17 @@ const SideBar: React.FC = () => {
               )}
             </Link>
           </li>
+          <li>
+            <Link
+              href="/admin-ministere/profile"
+              className={clsx(styles.menuItem, {
+                [styles.active]: pathname === "/admin-ministere/profile",
+              })}
+            >
+              <FiUser />
+              <span>Profile</span>
+            </Link>
+          </li>
         </ul>
       </nav>
 

@@ -154,7 +154,7 @@ export default function UsersWithoutRole({
             {currentUsers.length === 0 ? (
               <tr>
                 <td colSpan={5} style={{ textAlign: "center", padding: "1em" }}>
-                  Aucun utilisateur trouvé.
+                  Aucunne invitation trouvée.
                 </td>
               </tr>
             ) : (

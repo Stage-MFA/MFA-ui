@@ -1,6 +1,6 @@
 import UserProfile from "@/app/components/user/UserProfile";
 
-export default function technicienMinisterePage() {
+export default function MinistereProfilePage() {
   return (
     <div>
       <UserProfile />

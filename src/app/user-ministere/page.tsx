@@ -1,7 +1,9 @@
+import UserProfile from "@/app/components/user/UserProfile";
+
 export default function UserMinisterePage() {
   return (
     <div>
-      <h1>User Ministere Page</h1>
+      <UserProfile />
     </div>
   );
 }
