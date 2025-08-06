@@ -46,7 +46,7 @@ export default function UpdateRoleUser() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email: emailParam, role: data.role }),
       });
-
+      if (!response.ok) throw new Error("Erreur lors de la mise à jour du rôle.");
       router.push(`${BASE_URL_FRONTEND}/admin-ministere/user`);
       alert("Rôle mis à jour avec succès !");
       reset();

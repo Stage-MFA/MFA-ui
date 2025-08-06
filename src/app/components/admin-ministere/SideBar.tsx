@@ -5,17 +5,16 @@ import { FaHome, FaSignOutAlt } from "react-icons/fa";
 import { FiUser, FiSend } from "react-icons/fi";
 import Cookies from "js-cookie";
 import { useRouter, usePathname } from "next/navigation";
-import { BASE_URL_FRONTEND ,BASE_URL_API} from "@/lib/constants";
+import { BASE_URL_FRONTEND, BASE_URL_API } from "@/lib/constants";
 import Image from "next/image";
 import Link from "next/link";
 import clsx from "clsx";
-import { useState ,useEffect} from "react";
-
+import { useState, useEffect } from "react";
 
 const SideBar: React.FC = () => {
   const router = useRouter();
   const pathname = usePathname();
-  const [countNoRole , setCountNoRole] = useState<number>(0);
+  const [countNoRole, setCountNoRole] = useState<number>(0);
 
   const handleLogout = () => {
     Cookies.remove("accessToken");
@@ -26,15 +25,37 @@ const SideBar: React.FC = () => {
     router.push(`${BASE_URL_FRONTEND}`);
   };
 
+  
   useEffect(() => {
     const fetchData = async () => {
-      const response = await fetch(`${BASE_URL_API}/users/invitation`, {
-        method: "GET",
-      });
-      const data = await response.json();
-      setCountNoRole(data);
+      try {
+        const response = await fetch(`${BASE_URL_API}/users/invitation`);
+        const data = await response.json();
+        setCountNoRole(data);
+      } catch (error) {
+        console.error("Erreur fetch invitation count:", error);
+      }
     };
     fetchData();
+  }, []);
+
+  
+  useEffect(() => {
+    const eventSource = new EventSource(`${BASE_URL_API}/invitation`);
+
+    eventSource.addEventListener("invitation-count", (event: MessageEvent) => {
+      const updatedCount = parseInt(event.data);
+      setCountNoRole(updatedCount);
+    });
+
+    eventSource.onerror = (error) => {
+      console.error("Erreur SSE:", error);
+      eventSource.close(); 
+    };
+
+    return () => {
+      eventSource.close(); 
+    };
   }, []);
 
   return (

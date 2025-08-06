@@ -6,8 +6,9 @@ import Cookies from "js-cookie";
 import { useEffect, useState } from "react";
 import { BASE_URL_API } from "@/lib/constants";
 import { FiEdit } from "react-icons/fi";
-import { fetchDirections } from "@/app/components/direction/DirectionServices";
-import { fetchSpecialities } from "@/app/components/speciality/SpecialityService";
+import { fetchDirections,Direction } from "@/app/components/direction/DirectionServices";
+import { fetchSpecialities, Speciality } from "@/app/components/speciality/SpecialityService";
+
 
 type Role = {
   id: number;
@@ -30,8 +31,8 @@ export default function UserProfile() {
   const [user, setUser] = useState<User | null>(null);
   const [showModal, setShowModal] = useState(false);
 
-  const [directions, setDirections] = useState<any[]>([]);
-  const [specialities, setSpecialities] = useState<any[]>([]);
+  const [directions, setDirections] = useState<Direction[]>([]);
+  const [specialities, setSpecialities] = useState<Speciality[]>([]);
 
   const [form, setForm] = useState({
     firstname: "",
@@ -58,8 +59,8 @@ export default function UserProfile() {
       setDirections(directions);
       setSpecialities(specialities);
 
-      const direction = directions.find((d: any) => d.name === data.direction);
-      const speciality = specialities.find((s: any) => s.name === data.speciality);
+      const direction = directions.find((d: Direction) => d.name === data.direction);
+      const speciality = specialities.find((s: Speciality) => s.name === data.speciality);
 
       setForm({
         firstname: data.firstname,

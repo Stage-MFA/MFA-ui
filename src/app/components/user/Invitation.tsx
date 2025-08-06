@@ -7,7 +7,6 @@ import { FiEdit, FiTrash2, FiSearch } from "react-icons/fi";
 import styles from "@/app/style/user.module.css";
 import Swal from "sweetalert2";
 
-
 type Role = {
   id: number;
   name: string;
@@ -28,16 +27,16 @@ type UsersWithoutRoleProps = {
   onCountReady?: (count: number) => void;
 };
 
-export default function UsersWithoutRole({
-  onCountReady,
-}: UsersWithoutRoleProps) {
+export default function UsersWithoutRole({ onCountReady }: UsersWithoutRoleProps) {
   const [users, setUsers] = useState<User[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 8;
   const router = useRouter();
+  const [countNoRole, setCountNoRole] = useState<number>(0);
 
   useEffect(() => {
+   
     async function fetchUsers() {
       try {
         const res = await fetch(`${BASE_URL_API}/users`, {
@@ -46,16 +45,15 @@ export default function UsersWithoutRole({
           cache: "no-store",
         });
 
-        if (!res.ok)
-          throw new Error("Erreur lors du chargement des utilisateurs");
+        if (!res.ok) throw new Error("Erreur lors du chargement des utilisateurs");
 
         const data: User[] = await res.json();
 
-        const usersWithoutRoles = data.filter(
-          (user) => user.roleResDto.length === 0,
-        );
+      
+        const usersWithoutRoles = data.filter((user) => user.roleResDto.length === 0);
         setUsers(usersWithoutRoles);
 
+        setCountNoRole(usersWithoutRoles.length);
         if (onCountReady) onCountReady(usersWithoutRoles.length);
       } catch (error) {
         console.error(error);
@@ -63,14 +61,35 @@ export default function UsersWithoutRole({
     }
 
     fetchUsers();
-  }, [onCountReady]);
+    
+    const eventSource = new EventSource(`${BASE_URL_API}/invitation`);
+
+    eventSource.addEventListener("invitation-count", (event: MessageEvent) => {
+      const updatedCount = parseInt(event.data);
+      setCountNoRole(updatedCount);
+      if (onCountReady) onCountReady(updatedCount);
+    });
+
+    eventSource.addEventListener("invitation-list", (event: MessageEvent) => {
+      
+      const updatedList: User[] = JSON.parse(event.data);
+      setUsers(updatedList);
+    });
+
+    eventSource.onerror = (error) => {
+      console.error("Erreur SSE:", error);
+      eventSource.close();
+    };
+
+    return () => {
+      eventSource.close();
+    };
+  }, [countNoRole, onCountReady]);
 
   const filteredUsers = users.filter(
     (user) =>
-      `${user.firstname} ${user.lastname}`
-        .toLowerCase()
-        .includes(searchTerm.toLowerCase()) ||
-      user.email.toLowerCase().includes(searchTerm.toLowerCase()),
+      `${user.firstname} ${user.lastname}`.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      user.email.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   const totalPages = Math.ceil(filteredUsers.length / itemsPerPage);
@@ -97,9 +116,7 @@ export default function UsersWithoutRole({
         });
 
         if (res.ok) {
-          setUsers((prevUsers) =>
-            prevUsers.filter((user) => user.id !== userId),
-          );
+          setUsers((prevUsers) => prevUsers.filter((user) => user.id !== userId));
           Swal.fire("Supprimé !", "L'utilisateur a été supprimé.", "success");
           router.refresh();
         } else {
@@ -155,7 +172,7 @@ export default function UsersWithoutRole({
             {currentUsers.length === 0 ? (
               <tr>
                 <td colSpan={5} style={{ textAlign: "center", padding: "1em" }}>
-                  Aucunne invitation trouvée.
+                  Aucune invitation trouvée.
                 </td>
               </tr>
             ) : (
@@ -203,7 +220,9 @@ export default function UsersWithoutRole({
           <button
             key={index}
             onClick={() => handlePageChange(index + 1)}
-            className={`${styles.pageButton} ${currentPage === index + 1 ? styles.activePage : ""}`}
+            className={`${styles.pageButton} ${
+              currentPage === index + 1 ? styles.activePage : ""
+            }`}
           >
             {index + 1}
           </button>

@@ -18,7 +18,6 @@ import {
   fetchSpecialities,
 } from "@/app/components/speciality/SpecialityService";
 import { Eye, EyeOff } from "lucide-react";
-import Cookies from "js-cookie";
 
 
 const formSchema = z.object({
