@@ -5,11 +5,9 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
-import Cookies from "js-cookie";
 import { BASE_URL_FRONTEND, BASE_URL_API } from "@/lib/constants";
 import { Eye, EyeOff } from "lucide-react";
 import Image from "next/image";
-
 
 const formSchema = z.object({
   email: z.string().email("Email invalide"),
@@ -44,20 +42,19 @@ export default function Home() {
         body: JSON.stringify(data),
       });
 
-      if (!response.ok) {
-        throw new Error("Échec de la connexion");
-      }
+      if (!response.ok) throw new Error("Échec de la connexion");
 
       const result = await response.json();
+
       if (!result.accessToken || !result.refreshToken) {
         throw new Error("Token manquant dans la réponse");
       }
 
-      Cookies.set("accessToken", result.accessToken, { expires: 1 });
-      Cookies.set("refreshToken", result.refreshToken, { expires: 7 });
-      Cookies.set("user", data.email, { expires: 1 });
-      Cookies.set("role", result.roles, { expires: 1 });
-      Cookies.set("pwd", data.password, { expires: 1 });
+      sessionStorage.setItem("accessToken", result.accessToken);
+      sessionStorage.setItem("refreshToken", result.refreshToken);
+      sessionStorage.setItem("user", data.email);
+      sessionStorage.setItem("role", result.roles);
+      sessionStorage.setItem("pwd", data.password);
 
       if (!result.roles) {
         alert("Aucun rôle attribué. Veuillez contacter l'administrateur.");

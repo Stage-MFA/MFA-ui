@@ -2,13 +2,17 @@
 
 import Image from "next/image";
 import styles from "@/app/style/userProfile.module.css";
-import Cookies from "js-cookie";
 import { useEffect, useState } from "react";
 import { BASE_URL_API } from "@/lib/constants";
 import { FiEdit } from "react-icons/fi";
-import { fetchDirections,Direction } from "@/app/components/direction/DirectionServices";
-import { fetchSpecialities, Speciality } from "@/app/components/speciality/SpecialityService";
-
+import {
+  fetchDirections,
+  Direction,
+} from "@/app/components/direction/DirectionServices";
+import {
+  fetchSpecialities,
+  Speciality,
+} from "@/app/components/speciality/SpecialityService";
 
 type Role = {
   id: number;
@@ -42,7 +46,7 @@ export default function UserProfile() {
     gender: "M",
   });
 
-  const email = Cookies.get("user");
+  const email = sessionStorage.getItem("user");
 
   useEffect(() => {
     if (!email) return;
@@ -53,14 +57,17 @@ export default function UserProfile() {
       const data: User = await res.json();
       setUser(data);
 
-      
       const directions = await fetchDirections();
       const specialities = await fetchSpecialities();
       setDirections(directions);
       setSpecialities(specialities);
 
-      const direction = directions.find((d: Direction) => d.name === data.direction);
-      const speciality = specialities.find((s: Speciality) => s.name === data.speciality);
+      const direction = directions.find(
+        (d: Direction) => d.name === data.direction,
+      );
+      const speciality = specialities.find(
+        (s: Speciality) => s.name === data.speciality,
+      );
 
       setForm({
         firstname: data.firstname,
@@ -74,7 +81,9 @@ export default function UserProfile() {
     fetchUser();
   }, [email]);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
+  ) => {
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));
   };
@@ -87,7 +96,7 @@ export default function UserProfile() {
       directionId: parseInt(form.directionId),
       specialityId: form.specialityId ? parseInt(form.specialityId) : null,
       email: user.email,
-      password: Cookies.get("pwd"),
+      password: sessionStorage.getItem("pwd"),
     };
 
     const res = await fetch(`${BASE_URL_API}/auth/register`, {
@@ -98,7 +107,9 @@ export default function UserProfile() {
 
     if (res.ok) {
       setShowModal(false);
-      const refreshed = await fetch(`${BASE_URL_API}/users/email?email=${user.email}`);
+      const refreshed = await fetch(
+        `${BASE_URL_API}/users/email?email=${user.email}`,
+      );
       const refreshedUser = await refreshed.json();
       setUser(refreshedUser);
     } else {
@@ -106,7 +117,7 @@ export default function UserProfile() {
     }
   };
 
-  if (!user) return <p>Chargement...</p>;
+  if (!user) return <p></p>;
 
   return (
     <div className={styles.page}>
@@ -131,9 +142,15 @@ export default function UserProfile() {
           />
         </div>
         <div className={styles.userInfo}>
-          <h1 className={styles.fullName}>{user.firstname} {user.lastname}</h1>
+          <h1 className={styles.fullName}>
+            {user.firstname} {user.lastname}
+          </h1>
           <p className={styles.email}>{user.email}</p>
-          <button className={styles.editButton} onClick={() => setShowModal(true)} title="Modifier le profil">
+          <button
+            className={styles.editButton}
+            onClick={() => setShowModal(true)}
+            title="Modifier le profil"
+          >
             <FiEdit />
           </button>
         </div>
@@ -145,7 +162,9 @@ export default function UserProfile() {
           <div className={styles.infoGrid}>
             <div className={styles.infoItem}>
               <span className={styles.infoLabel}>Nom complet</span>
-              <span className={styles.infoValue}>{user.firstname} {user.lastname}</span>
+              <span className={styles.infoValue}>
+                {user.firstname} {user.lastname}
+              </span>
             </div>
             <div className={styles.infoItem}>
               <span className={styles.infoLabel}>Spécialité</span>
@@ -174,31 +193,69 @@ export default function UserProfile() {
         <div className={styles.modalOverlay}>
           <div className={styles.modal}>
             <h3>Modifier mon profil</h3>
-            <input name="firstname" value={form.firstname} onChange={handleChange} placeholder="Prénom" className={styles.input} />
-            <input name="lastname" value={form.lastname} onChange={handleChange} placeholder="Nom" className={styles.input} />
+            <input
+              name="firstname"
+              value={form.firstname}
+              onChange={handleChange}
+              placeholder="Prénom"
+              className={styles.input}
+            />
+            <input
+              name="lastname"
+              value={form.lastname}
+              onChange={handleChange}
+              placeholder="Nom"
+              className={styles.input}
+            />
 
-            <select name="directionId" value={form.directionId} onChange={handleChange} className={styles.input}>
+            <select
+              name="directionId"
+              value={form.directionId}
+              onChange={handleChange}
+              className={styles.input}
+            >
               <option value="">-- Direction --</option>
               {directions.map((d) => (
-                <option key={d.directionId} value={d.directionId}>{d.name}</option>
+                <option key={d.directionId} value={d.directionId}>
+                  {d.name}
+                </option>
               ))}
             </select>
 
-            <select name="specialityId" value={form.specialityId} onChange={handleChange} className={styles.input}>
+            <select
+              name="specialityId"
+              value={form.specialityId}
+              onChange={handleChange}
+              className={styles.input}
+            >
               <option value="">-- Spécialité --</option>
               {specialities.map((s) => (
-                <option key={s.specialityId} value={s.specialityId}>{s.name}</option>
+                <option key={s.specialityId} value={s.specialityId}>
+                  {s.name}
+                </option>
               ))}
             </select>
 
-            <select name="gender" value={form.gender} onChange={handleChange} className={styles.input}>
+            <select
+              name="gender"
+              value={form.gender}
+              onChange={handleChange}
+              className={styles.input}
+            >
               <option value="M">Masculin</option>
               <option value="F">Féminin</option>
             </select>
 
             <div className={styles.modalActions}>
-              <button onClick={handleUpdate} className={styles.button}>Enregistrer</button>
-              <button onClick={() => setShowModal(false)} className={styles.buttonCancel}>Annuler</button>
+              <button onClick={handleUpdate} className={styles.button}>
+                Enregistrer
+              </button>
+              <button
+                onClick={() => setShowModal(false)}
+                className={styles.buttonCancel}
+              >
+                Annuler
+              </button>
             </div>
           </div>
         </div>

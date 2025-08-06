@@ -27,7 +27,9 @@ type UsersWithoutRoleProps = {
   onCountReady?: (count: number) => void;
 };
 
-export default function UsersWithoutRole({ onCountReady }: UsersWithoutRoleProps) {
+export default function UsersWithoutRole({
+  onCountReady,
+}: UsersWithoutRoleProps) {
   const [users, setUsers] = useState<User[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
@@ -36,7 +38,6 @@ export default function UsersWithoutRole({ onCountReady }: UsersWithoutRoleProps
   const [countNoRole, setCountNoRole] = useState<number>(0);
 
   useEffect(() => {
-   
     async function fetchUsers() {
       try {
         const res = await fetch(`${BASE_URL_API}/users`, {
@@ -45,12 +46,14 @@ export default function UsersWithoutRole({ onCountReady }: UsersWithoutRoleProps
           cache: "no-store",
         });
 
-        if (!res.ok) throw new Error("Erreur lors du chargement des utilisateurs");
+        if (!res.ok)
+          throw new Error("Erreur lors du chargement des utilisateurs");
 
         const data: User[] = await res.json();
 
-      
-        const usersWithoutRoles = data.filter((user) => user.roleResDto.length === 0);
+        const usersWithoutRoles = data.filter(
+          (user) => user.roleResDto.length === 0,
+        );
         setUsers(usersWithoutRoles);
 
         setCountNoRole(usersWithoutRoles.length);
@@ -61,7 +64,7 @@ export default function UsersWithoutRole({ onCountReady }: UsersWithoutRoleProps
     }
 
     fetchUsers();
-    
+
     const eventSource = new EventSource(`${BASE_URL_API}/invitation`);
 
     eventSource.addEventListener("invitation-count", (event: MessageEvent) => {
@@ -71,7 +74,6 @@ export default function UsersWithoutRole({ onCountReady }: UsersWithoutRoleProps
     });
 
     eventSource.addEventListener("invitation-list", (event: MessageEvent) => {
-      
       const updatedList: User[] = JSON.parse(event.data);
       setUsers(updatedList);
     });
@@ -88,8 +90,10 @@ export default function UsersWithoutRole({ onCountReady }: UsersWithoutRoleProps
 
   const filteredUsers = users.filter(
     (user) =>
-      `${user.firstname} ${user.lastname}`.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      user.email.toLowerCase().includes(searchTerm.toLowerCase())
+      `${user.firstname} ${user.lastname}`
+        .toLowerCase()
+        .includes(searchTerm.toLowerCase()) ||
+      user.email.toLowerCase().includes(searchTerm.toLowerCase()),
   );
 
   const totalPages = Math.ceil(filteredUsers.length / itemsPerPage);
@@ -116,7 +120,9 @@ export default function UsersWithoutRole({ onCountReady }: UsersWithoutRoleProps
         });
 
         if (res.ok) {
-          setUsers((prevUsers) => prevUsers.filter((user) => user.id !== userId));
+          setUsers((prevUsers) =>
+            prevUsers.filter((user) => user.id !== userId),
+          );
           Swal.fire("Supprimé !", "L'utilisateur a été supprimé.", "success");
           router.refresh();
         } else {

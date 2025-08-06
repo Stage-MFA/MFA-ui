@@ -5,7 +5,7 @@ import { FiUser } from "react-icons/fi";
 import styles from "@/app/style/Navbar.module.css";
 
 interface NavbarProps {
-  userName?: string;
+  userName?: string | null;
 }
 
 const Navbar: React.FC<NavbarProps> = ({ userName = "Utilisateur" }) => {

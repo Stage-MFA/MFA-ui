@@ -19,7 +19,6 @@ import {
 } from "@/app/components/speciality/SpecialityService";
 import { Eye, EyeOff } from "lucide-react";
 
-
 const formSchema = z.object({
   firstname: z.string().min(1, "Le prénom est requis"),
   lastname: z.string().min(1, "Le nom est requis"),

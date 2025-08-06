@@ -10,8 +10,6 @@ import { useRouter } from "next/navigation";
 import styles from "@/app/style/updateRoleUser.module.css";
 import { FiArrowLeft } from "react-icons/fi";
 
-
-
 const formSchema = z.object({
   role: z.string().min(1, "Le rôle est requis"),
 });
@@ -46,7 +44,8 @@ export default function UpdateRoleUser() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email: emailParam, role: data.role }),
       });
-      if (!response.ok) throw new Error("Erreur lors de la mise à jour du rôle.");
+      if (!response.ok)
+        throw new Error("Erreur lors de la mise à jour du rôle.");
       router.push(`${BASE_URL_FRONTEND}/admin-ministere/user`);
       alert("Rôle mis à jour avec succès !");
       reset();

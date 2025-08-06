@@ -2,7 +2,6 @@
 import SideBar from "../components/user-ministere/SideBar";
 import styles from "@/app/style/adminLayout.module.css";
 import Navbar from "@/app/components/user-ministere/NavBar";
-import Cookies from "js-cookie";
 import { useIsUser } from "@/hooks/useIsUser";
 
 export default function UserLayout({
@@ -10,7 +9,8 @@ export default function UserLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const userName = Cookies.get("user");
+  const userName =
+    typeof window !== "undefined" ? sessionStorage.getItem("user") : "";
   const { isVerifying } = useIsUser();
   if (isVerifying) {
     return <div></div>;

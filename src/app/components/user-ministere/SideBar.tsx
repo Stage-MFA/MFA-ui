@@ -3,7 +3,6 @@ import React from "react";
 import styles from "@/app/Style/sideBar.module.css";
 import { FaSignOutAlt } from "react-icons/fa";
 import { FiUser, FiTool } from "react-icons/fi";
-import Cookies from "js-cookie";
 import { useRouter, usePathname } from "next/navigation";
 import { BASE_URL_FRONTEND } from "@/lib/constants";
 import Image from "next/image";
@@ -15,10 +14,7 @@ const SideBar: React.FC = () => {
   const pathname = usePathname();
 
   const handleLogout = () => {
-    Cookies.remove("accessToken");
-    Cookies.remove("refreshToken");
-    Cookies.remove("user");
-    Cookies.remove("role");
+    sessionStorage.clear();
     router.push(`${BASE_URL_FRONTEND}`);
   };
 

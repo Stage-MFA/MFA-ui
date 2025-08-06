@@ -3,7 +3,6 @@
 import styles from "@/app/Style/sideBar.module.css";
 import { FaHome, FaSignOutAlt } from "react-icons/fa";
 import { FiUser, FiSend } from "react-icons/fi";
-import Cookies from "js-cookie";
 import { useRouter, usePathname } from "next/navigation";
 import { BASE_URL_FRONTEND, BASE_URL_API } from "@/lib/constants";
 import Image from "next/image";
@@ -17,15 +16,10 @@ const SideBar: React.FC = () => {
   const [countNoRole, setCountNoRole] = useState<number>(0);
 
   const handleLogout = () => {
-    Cookies.remove("accessToken");
-    Cookies.remove("refreshToken");
-    Cookies.remove("user");
-    Cookies.remove("role");
-    Cookies.remove("pwd");
+    sessionStorage.clear();
     router.push(`${BASE_URL_FRONTEND}`);
   };
 
-  
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -39,7 +33,6 @@ const SideBar: React.FC = () => {
     fetchData();
   }, []);
 
-  
   useEffect(() => {
     const eventSource = new EventSource(`${BASE_URL_API}/invitation`);
 
@@ -50,11 +43,11 @@ const SideBar: React.FC = () => {
 
     eventSource.onerror = (error) => {
       console.error("Erreur SSE:", error);
-      eventSource.close(); 
+      eventSource.close();
     };
 
     return () => {
-      eventSource.close(); 
+      eventSource.close();
     };
   }, []);
 
