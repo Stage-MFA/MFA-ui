@@ -2,7 +2,7 @@
 
 import styles from "@/app/Style/sideBar.module.css";
 import { FaHome, FaSignOutAlt } from "react-icons/fa";
-import { FiUser, FiSend } from "react-icons/fi";
+import { FiUser, FiSend, FiTool } from "react-icons/fi";
 import { useRouter, usePathname } from "next/navigation";
 import { BASE_URL_FRONTEND, BASE_URL_API } from "@/lib/constants";
 import Image from "next/image";
@@ -100,6 +100,17 @@ const SideBar: React.FC = () => {
               {countNoRole > 0 && (
                 <span className={styles.badge}>{countNoRole}</span>
               )}
+            </Link>
+          </li>
+          <li>
+            <Link
+              href="/admin-ministere/material"
+              className={clsx(styles.menuItem, {
+                [styles.active]: pathname === "/admin-ministere/material",
+              })}
+            >
+              <FiTool />
+              <span>Material</span>
             </Link>
           </li>
           <li>
