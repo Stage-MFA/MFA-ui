@@ -1,7 +1,6 @@
 "use client";
-
-import { useEffect, useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -13,54 +12,19 @@ import { FaArrowLeft } from "react-icons/fa";
 const formSchema = z.object({
   name: z.string().min(1, "Le nom est requis"),
 });
-
 type FormValues = z.infer<typeof formSchema>;
 
-type Direction = {
-  directionId: number;
-  name: string;
-};
-
-export default function UpdateDirection() {
-  const [isLoading, setIsLoading] = useState(false);
+export default function CreateSpeciality() {
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const id = searchParams.get("directionId");
+  const [isLoading, setIsLoading] = useState(false);
 
   const {
     register,
     handleSubmit,
     formState: { errors },
-    reset,
   } = useForm<FormValues>({
     resolver: zodResolver(formSchema),
-    defaultValues: {
-      name: "",
-    },
   });
-
-  useEffect(() => {
-    async function fetchDirection() {
-      if (!id) return;
-      try {
-        const res = await fetch(`${BASE_URL_API}/directions/${id}`, {
-          method: "GET",
-          headers: { "Content-Type": "application/json" },
-          cache: "no-store",
-        });
-        if (!res.ok)
-          throw new Error("Erreur lors du chargement de la direction");
-        const data: Direction = await res.json();
-        reset({
-          name: data.name,
-        });
-      } catch (error) {
-        console.error("Erreur :", error);
-        alert("Erreur lors du chargement de la direction");
-      }
-    }
-    fetchDirection();
-  }, [id, reset]);
 
   const onSubmit = async (data: FormValues) => {
     setIsLoading(true);
@@ -68,17 +32,19 @@ export default function UpdateDirection() {
       const payload = {
         ...data,
       };
-      const response = await fetch(`${BASE_URL_API}/directions/${id}`, {
+
+      const response = await fetch(`${BASE_URL_API}/speciality`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       });
+
       if (!response.ok)
-        throw new Error("Échec de la modification de la direction");
+        throw new Error("Échec d'enregistrement de la spécialité");
       router.push("/admin-ministere/speciality");
     } catch (error) {
       console.error("Erreur :", error);
-      alert("Erreur lors de la modification de la direction");
+      alert("Erreur lors de l'enregistrement de la spécialité");
     } finally {
       setIsLoading(false);
     }
@@ -94,18 +60,15 @@ export default function UpdateDirection() {
         >
           <FaArrowLeft />
         </button>
+
         <Image
           alt="Logo Ministère"
-          src="/direction.png"
+          src="/speciality.png"
           width={300}
           height={200}
-          style={{
-            display: "block",
-            margin: "0 auto",
-            height: "auto",
-            marginBottom: "-20px",
-          }}
+          className={styles.logo}
         />
+
         <form
           onSubmit={handleSubmit(onSubmit)}
           className={styles.form}
@@ -114,7 +77,7 @@ export default function UpdateDirection() {
           <div className={styles.grid}>
             <div className={styles.column}>
               <label htmlFor="name" className={styles.label}>
-                Nom de la Direction
+                Nom de la Spécialité
               </label>
               <input
                 id="name"
@@ -134,7 +97,7 @@ export default function UpdateDirection() {
               disabled={isLoading}
               className={styles.button}
             >
-              {isLoading ? "Chargement..." : "Mettre à jour"}
+              {isLoading ? "Chargement..." : "Créer la Spécialité"}
             </button>
           </div>
         </form>

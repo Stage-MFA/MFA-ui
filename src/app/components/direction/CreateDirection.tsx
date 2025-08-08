@@ -34,7 +34,7 @@ export default function CreateDirection() {
       };
 
       const response = await fetch(`${BASE_URL_API}/directions`, {
-        method: "PUT",
+        method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       });

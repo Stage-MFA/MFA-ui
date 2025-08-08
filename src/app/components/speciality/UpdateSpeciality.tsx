@@ -16,16 +16,16 @@ const formSchema = z.object({
 
 type FormValues = z.infer<typeof formSchema>;
 
-type Direction = {
-  directionId: number;
+type Speciality = {
+  specialityId: number;
   name: string;
 };
 
-export default function UpdateDirection() {
+export default function UpdateSpeciality() {
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
   const searchParams = useSearchParams();
-  const id = searchParams.get("directionId");
+  const id = searchParams.get("specialityId");
 
   const {
     register,
@@ -43,20 +43,20 @@ export default function UpdateDirection() {
     async function fetchDirection() {
       if (!id) return;
       try {
-        const res = await fetch(`${BASE_URL_API}/directions/${id}`, {
+        const res = await fetch(`${BASE_URL_API}/speciality/${id}`, {
           method: "GET",
           headers: { "Content-Type": "application/json" },
           cache: "no-store",
         });
         if (!res.ok)
-          throw new Error("Erreur lors du chargement de la direction");
-        const data: Direction = await res.json();
+          throw new Error("Erreur lors du chargement de la Speciality");
+        const data: Speciality = await res.json();
         reset({
           name: data.name,
         });
       } catch (error) {
         console.error("Erreur :", error);
-        alert("Erreur lors du chargement de la direction");
+        alert("Erreur lors du chargement de la Speciality");
       }
     }
     fetchDirection();
@@ -68,17 +68,17 @@ export default function UpdateDirection() {
       const payload = {
         ...data,
       };
-      const response = await fetch(`${BASE_URL_API}/directions/${id}`, {
+      const response = await fetch(`${BASE_URL_API}/speciality/${id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       });
       if (!response.ok)
-        throw new Error("Échec de la modification de la direction");
+        throw new Error("Échec de la modification de la Speciality");
       router.push("/admin-ministere/speciality");
     } catch (error) {
       console.error("Erreur :", error);
-      alert("Erreur lors de la modification de la direction");
+      alert("Erreur lors de la modification de la Speciality");
     } finally {
       setIsLoading(false);
     }
@@ -96,15 +96,10 @@ export default function UpdateDirection() {
         </button>
         <Image
           alt="Logo Ministère"
-          src="/direction.png"
+          src="/speciality.png"
           width={300}
           height={200}
-          style={{
-            display: "block",
-            margin: "0 auto",
-            height: "auto",
-            marginBottom: "-20px",
-          }}
+          className={styles.logo}
         />
         <form
           onSubmit={handleSubmit(onSubmit)}
@@ -114,7 +109,7 @@ export default function UpdateDirection() {
           <div className={styles.grid}>
             <div className={styles.column}>
               <label htmlFor="name" className={styles.label}>
-                Nom de la Direction
+                Nom de la Speciality
               </label>
               <input
                 id="name"
