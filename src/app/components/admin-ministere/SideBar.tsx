@@ -9,6 +9,7 @@ import Image from "next/image";
 import Link from "next/link";
 import clsx from "clsx";
 import { useState, useEffect } from "react";
+import { FaBrain } from "react-icons/fa";
 
 const SideBar: React.FC = () => {
   const router = useRouter();
@@ -111,6 +112,17 @@ const SideBar: React.FC = () => {
             >
               <FiTool />
               <span>Material</span>
+            </Link>
+          </li>
+          <li>
+            <Link
+              href="/admin-ministere/speciality"
+              className={clsx(styles.menuItem, {
+                [styles.active]: pathname === "/admin-ministere/speciality",
+              })}
+            >
+              <FaBrain />
+              <span>Speciality & Direction</span>
             </Link>
           </li>
           <li>
