@@ -16,7 +16,7 @@ export default function DirectionList() {
   const [directions, setDirections] = useState<Direction[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
-  const itemsPerPage = 4;
+  const itemsPerPage = 3;
   const router = useRouter();
 
   useEffect(() => {
