@@ -1,7 +1,7 @@
 "use client";
 
 import styles from "@/app/Style/sideBar.module.css";
-import { FaHome, FaSignOutAlt } from "react-icons/fa";
+import { FaHome, FaSignOutAlt, FaSitemap, FaStickyNote } from "react-icons/fa";
 import { FiUser, FiSend, FiTool } from "react-icons/fi";
 import { useRouter, usePathname } from "next/navigation";
 import { BASE_URL_FRONTEND, BASE_URL_API } from "@/lib/constants";
@@ -9,7 +9,6 @@ import Image from "next/image";
 import Link from "next/link";
 import clsx from "clsx";
 import { useState, useEffect } from "react";
-import { FaBrain } from "react-icons/fa";
 
 const SideBar: React.FC = () => {
   const router = useRouter();
@@ -116,13 +115,25 @@ const SideBar: React.FC = () => {
           </li>
           <li>
             <Link
-              href="/admin-ministere/speciality"
+              href="/admin-ministere/organisation"
               className={clsx(styles.menuItem, {
-                [styles.active]: pathname === "/admin-ministere/speciality",
+                [styles.active]: pathname === "/admin-ministere/organisation",
               })}
             >
-              <FaBrain />
-              <span>Speciality & Direction</span>
+              <FaSitemap />
+              <span>Organisation</span>
+            </Link>
+          </li>
+          <li>
+            <Link
+              href="/admin-ministere/request-intervention"
+              className={clsx(styles.menuItem, {
+                [styles.active]:
+                  pathname === "/admin-ministere/request-intervention",
+              })}
+            >
+              <FaStickyNote />
+              <span>Demande</span>
             </Link>
           </li>
           <li>

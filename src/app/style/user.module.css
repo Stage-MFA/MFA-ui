@@ -1,3 +1,87 @@
+/* Badge de base */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 3px;
+  padding: 0.25em 0.6em;
+  font-size: 0.75rem;
+  font-weight: 600;
+  line-height: 1;
+  color: white;
+  white-space: nowrap;
+  vertical-align: baseline;
+  border-radius: 12px;
+  user-select: none;
+  min-width: 110px;
+  height: 25px;
+}
+
+.filterSelect {
+  padding: 6px 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  margin-left: 10px;
+  background-color: white;
+  margin-top: 20px;
+  margin-right: 20px;
+  outline: none;
+  color: #7e7e7e;
+}
+
+.badge2 {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 0.25em 0.6em;
+  font-size: 0.75rem;
+  font-weight: 600;
+  line-height: 1;
+  color: white;
+  white-space: nowrap;
+  vertical-align: baseline;
+  border-radius: 12px;
+  user-select: none;
+  height: 25px;
+  min-width: 80px;
+}
+
+/* Status */
+.statusPending {
+  background-color: #f59e0b;
+}
+.statusInProgress {
+  background-color: #2d71fa;
+}
+.statusFinish {
+  background-color: #299402;
+}
+
+/* Priority */
+.priorityHigh {
+  background-color: #dc2626;
+}
+.priorityWait {
+  background-color: #2d71fa;
+}
+
+.spin {
+  animation: spin 2s ease-in-out infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  50% {
+    transform: rotate(180deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
 .pagination {
   display: flex;
   justify-content: center;
@@ -82,6 +166,7 @@
   position: relative;
   width: 100%;
   max-width: 300px;
+  margin-top: 20px;
 }
 
 .searchIcon {
