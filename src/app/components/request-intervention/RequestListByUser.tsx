@@ -10,6 +10,7 @@ import {
   FiClock,
   FiLoader,
   FiCheckCircle,
+  FiPlus,
 } from "react-icons/fi";
 import styles from "@/app/style/user.module.css";
 import Swal from "sweetalert2";
@@ -51,19 +52,44 @@ type User = {
   roleResDto: Role[];
 };
 
-export default function RequestList() {
+export default function RequestListByUser() {
   const [requests, setRequests] = useState<Request[]>([]);
-  const [users, setUsers] = useState<User[]>([]);
+  const [users, setUsers] = useState<User>();
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("ALL");
   const itemsPerPage = 6;
   const router = useRouter();
+  const userEmail = sessionStorage.getItem("user");
 
   useEffect(() => {
+    async function fetchUsers() {
+      try {
+        const res = await fetch(
+          `${BASE_URL_API}/users/email?email=${userEmail}`,
+          {
+            method: "GET",
+            headers: { "Content-Type": "application/json" },
+            cache: "no-store",
+          },
+        );
+        if (!res.ok)
+          throw new Error("Erreur lors du chargement des utilisateurs");
+        const data: User = await res.json();
+        setUsers(data);
+      } catch (error) {
+        console.error(error);
+      }
+    }
+    fetchUsers();
+  }, [userEmail]);
+
+  useEffect(() => {
+    if (!users?.id) return;
+
     async function fetchRequests() {
       try {
-        const res = await fetch(`${BASE_URL_API}/request`, {
+        const res = await fetch(`${BASE_URL_API}/request/users/${users?.id}`, {
           method: "GET",
           headers: { "Content-Type": "application/json" },
           cache: "no-store",
@@ -75,37 +101,9 @@ export default function RequestList() {
         console.error(error);
       }
     }
+
     fetchRequests();
-  }, []);
-
-  useEffect(() => {
-    async function fetchUsers() {
-      try {
-        const res = await fetch(`${BASE_URL_API}/users`, {
-          method: "GET",
-          headers: { "Content-Type": "application/json" },
-          cache: "no-store",
-        });
-        if (!res.ok)
-          throw new Error("Erreur lors du chargement des utilisateurs");
-        const data: User[] = await res.json();
-        setUsers(data);
-      } catch (error) {
-        console.error(error);
-      }
-    }
-    fetchUsers();
-  }, []);
-
-  const getUserName = (idUser: number) => {
-    const user = users.find((u) => u.id === idUser);
-    return user ? `${user.firstname} ${user.lastname}` : "Utilisateur inconnu";
-  };
-
-  const getDirection = (idUser: number) => {
-    const user = users.find((u) => u.id === idUser);
-    return user ? user.direction : "Direction inconnue";
-  };
+  }, [users]);
 
   const statusClass = (status: string) => {
     switch (status.toUpperCase()) {
@@ -226,6 +224,10 @@ export default function RequestList() {
     if (page >= 1 && page <= totalPages) setCurrentPage(page);
   };
 
+  const handleAddUser = () => {
+    router.push(`/admin-ministere/request/add`);
+  };
+
   return (
     <div className={styles.container}>
       <div className={styles.header}>
@@ -242,7 +244,7 @@ export default function RequestList() {
             className={styles.searchInput}
           />
         </div>
-        <div>
+        <div className={styles.inlineRow}>
           <select
             value={statusFilter}
             onChange={(e) => {
@@ -256,6 +258,15 @@ export default function RequestList() {
             <option value="IN_PROGRESS">En cours</option>
             <option value="FINISH">Terminé</option>
           </select>
+          <div>
+            <button
+              onClick={handleAddUser}
+              style={{ marginTop: "40px" }}
+              className={styles.btnAdd}
+            >
+              <FiPlus /> Ajouter
+            </button>
+          </div>
         </div>
       </div>
 
@@ -263,7 +274,7 @@ export default function RequestList() {
         <thead className={styles.thead}>
           <tr>
             <th className={styles.th}>Date de demande</th>
-            <th className={styles.th}>Demandeur</th>
+            <th className={styles.th}>Nom</th>
             <th className={styles.th}>Direction</th>
             <th className={styles.th}>Matériels</th>
             <th className={styles.th}>Description</th>
@@ -284,8 +295,10 @@ export default function RequestList() {
                   minute: "2-digit",
                 })}
               </td>
-              <td className={styles.td}>{getUserName(request.idUser)}</td>
-              <td className={styles.td}>{getDirection(request.idUser)}</td>
+              <td className={styles.td}>
+                {users?.firstname} {users?.lastname}
+              </td>
+              <td className={styles.td}>{users?.direction}</td>
               <td className={styles.td}>
                 {request.materials.map((m) => m.name).join(", ")}
               </td>
@@ -326,9 +339,16 @@ export default function RequestList() {
             </tr>
           ))}
           {currentRequests.length === 0 && (
-            <tr>
+            <tr
+              style={{
+                textAlign: "center",
+                gap: "10 px",
+                marginBottom: "20px",
+              }}
+            >
               <td colSpan={7} className={styles.noData}>
-                Aucune demande trouvée
+                Vous n&apos;avez pas encore fait une demande
+                d&apos;intervention.
               </td>
             </tr>
           )}

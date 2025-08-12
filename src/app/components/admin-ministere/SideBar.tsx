@@ -133,7 +133,7 @@ const SideBar: React.FC = () => {
               })}
             >
               <FaStickyNote />
-              <span>Demande</span>
+              <span>Demande d&apos;intervention</span>
             </Link>
           </li>
           <li>

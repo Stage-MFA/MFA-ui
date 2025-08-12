@@ -1,7 +1,10 @@
+import RequestListByUser from "@/app/components/request-intervention/RequestListByUser";
 export default function RequestInterventionPage() {
   return (
     <div>
-      <h1>Liste des demandes intervention</h1>
+      <h1>
+        <RequestListByUser />
+      </h1>
     </div>
   );
 }
