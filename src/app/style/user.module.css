@@ -1,9 +1,66 @@
+.curentMaterielLabel {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 0;
+  cursor: pointer;
+}
+
+.requestDropdownMenu {
+  max-height: 200px;
+  overflow-y: auto;
+  scrollbar-width: thin;
+}
+
+.requestDropdownMenu::-webkit-scrollbar {
+  width: 6px;
+}
+
+.requestDropdownMenu::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+.requestDropdownMenu::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 4px;
+}
+
+.requestDropdownMenu::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+.priorityRow,
+.materialsRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.radioLabel {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #f5f5f5;
+  padding: 8px 12px;
+  border-radius: 6px;
+}
+
+.radioInput {
+  accent-color: #0070f3;
+}
+
+.radioText {
+  font-weight: 500;
+}
+
 .inlineRow {
   display: flex;
   flex-direction: row;
   align-items: center;
   gap: 12px;
 }
+
 /* Badge de base */
 .badge {
   display: inline-flex;
@@ -57,9 +114,11 @@
 .statusPending {
   background-color: #f59e0b;
 }
+
 .statusInProgress {
   background-color: #2d71fa;
 }
+
 .statusFinish {
   background-color: #299402;
 }
@@ -68,6 +127,7 @@
 .priorityHigh {
   background-color: #dc2626;
 }
+
 .priorityWait {
   background-color: #2d71fa;
 }
@@ -80,9 +140,11 @@
   0% {
     transform: rotate(0deg);
   }
+
   50% {
     transform: rotate(180deg);
   }
+
   100% {
     transform: rotate(360deg);
   }

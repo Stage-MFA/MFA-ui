@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { BASE_URL_API } from "@/lib/constants";
 import {
-  FiEdit,
   FiTrash2,
   FiSearch,
   FiClock,
@@ -166,10 +165,6 @@ export default function RequestListByUser() {
     }
   };
 
-  const handleEdit = (id: number) => {
-    router.push(`/admin-ministere/request/edit?interventionRequestId=${id}`);
-  };
-
   const handleDelete = async (id: number) => {
     const result = await Swal.fire({
       title: "Êtes-vous sûr ?",
@@ -225,7 +220,7 @@ export default function RequestListByUser() {
   };
 
   const handleAddUser = () => {
-    router.push(`/admin-ministere/request/add`);
+    router.push(`/user-ministere/request-intervention/add`);
   };
 
   return (
@@ -320,13 +315,6 @@ export default function RequestListByUser() {
               </td>
               <td className={styles.td}>
                 <div className={styles.actions}>
-                  <button
-                    className={`${styles.actionBtn} ${styles.edit}`}
-                    onClick={() => handleEdit(request.interventionRequestId)}
-                    title="Modifier"
-                  >
-                    <FiEdit size={18} />
-                  </button>
                   <button
                     className={`${styles.actionBtn} ${styles.delete}`}
                     onClick={() => handleDelete(request.interventionRequestId)}
