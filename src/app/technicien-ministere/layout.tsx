@@ -1,5 +1,5 @@
 "use client";
-import SideBar from "../components/user-ministere/SideBar";
+import SideBar from "../components/technicien-ministere/SideBar";
 import styles from "@/app/style/adminLayout.module.css";
 import Navbar from "@/app/components/user-ministere/NavBar";
 import { useIsTechnician } from "@/hooks/useIsTechnician";

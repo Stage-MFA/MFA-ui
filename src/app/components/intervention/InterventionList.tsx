@@ -4,36 +4,15 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { BASE_URL_API } from "@/lib/constants";
 import {
+  FiEdit,
   FiTrash2,
   FiSearch,
   FiClock,
   FiLoader,
   FiCheckCircle,
-  FiPlus,
 } from "react-icons/fi";
 import styles from "@/app/style/user.module.css";
 import Swal from "sweetalert2";
-
-type Material = {
-  materialId: number;
-  name: string;
-  type: string;
-  brand: string;
-  model: string;
-  serialNumber: number;
-  acquisitionDate: string;
-  guarantee: string;
-};
-
-type Request = {
-  interventionRequestId: number;
-  requestDate: string;
-  status: string;
-  priority: string;
-  materials: Material[];
-  description: string;
-  idUser: number;
-};
 
 type Role = {
   id: number;
@@ -51,58 +30,74 @@ type User = {
   roleResDto: Role[];
 };
 
-export default function RequestListByUser() {
-  const [requests, setRequests] = useState<Request[]>([]);
-  const [users, setUsers] = useState<User>();
+type Intervention = {
+  interventionId: number;
+  dateIntervention: string;
+  status: string;
+  description: string;
+  usersId: number;
+  interventionRequestId: number;
+};
+
+export default function InterventionList() {
+  const [interventions, setInterventions] = useState<Intervention[]>([]);
+  const [users, setUsers] = useState<User[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("PENDING");
-  const itemsPerPage = 5;
+  const [selectedDate, setSelectedDate] = useState<string>("");
+  const itemsPerPage = 6;
   const router = useRouter();
-  const userEmail = sessionStorage.getItem("user");
 
+  // Fetch interventions
+  useEffect(() => {
+    async function fetchInterventions() {
+      try {
+        const res = await fetch(`${BASE_URL_API}/interventions`, {
+          method: "GET",
+          headers: { "Content-Type": "application/json" },
+          cache: "no-store",
+        });
+        if (!res.ok)
+          throw new Error("Erreur lors du chargement des interventions");
+        const data: Intervention[] = await res.json();
+        setInterventions(data);
+      } catch (error) {
+        console.error(error);
+      }
+    }
+    fetchInterventions();
+  }, []);
+
+  // Fetch users
   useEffect(() => {
     async function fetchUsers() {
       try {
-        const res = await fetch(
-          `${BASE_URL_API}/users/email?email=${userEmail}`,
-          {
-            method: "GET",
-            headers: { "Content-Type": "application/json" },
-            cache: "no-store",
-          },
-        );
+        const res = await fetch(`${BASE_URL_API}/users`, {
+          method: "GET",
+          headers: { "Content-Type": "application/json" },
+          cache: "no-store",
+        });
         if (!res.ok)
           throw new Error("Erreur lors du chargement des utilisateurs");
-        const data: User = await res.json();
+        const data: User[] = await res.json();
         setUsers(data);
       } catch (error) {
         console.error(error);
       }
     }
     fetchUsers();
-  }, [userEmail]);
+  }, []);
 
-  useEffect(() => {
-    if (!users?.id) return;
+  const getUserName = (idUser: number) => {
+    const user = users.find((u) => u.id === idUser);
+    return user ? `${user.firstname} ${user.lastname}` : "Utilisateur inconnu";
+  };
 
-    async function fetchRequests() {
-      try {
-        const res = await fetch(`${BASE_URL_API}/request/users/${users?.id}`, {
-          method: "GET",
-          headers: { "Content-Type": "application/json" },
-          cache: "no-store",
-        });
-        if (!res.ok) throw new Error("Erreur lors du chargement des demandes");
-        const data: Request[] = await res.json();
-        setRequests(data);
-      } catch (error) {
-        console.error(error);
-      }
-    }
-
-    fetchRequests();
-  }, [users]);
+  const getDirection = (idUser: number) => {
+    const user = users.find((u) => u.id === idUser);
+    return user ? user.direction : "Direction inconnue";
+  };
 
   const statusClass = (status: string) => {
     switch (status.toUpperCase()) {
@@ -112,17 +107,6 @@ export default function RequestListByUser() {
         return styles.statusInProgress;
       case "FINISH":
         return styles.statusFinish;
-      default:
-        return "";
-    }
-  };
-
-  const priorityClass = (priority: string) => {
-    switch (priority.toUpperCase()) {
-      case "URGENT":
-        return styles.priorityHigh;
-      case "WAIT":
-        return styles.priorityWait;
       default:
         return "";
     }
@@ -148,21 +132,14 @@ export default function RequestListByUser() {
       case "IN_PROGRESS":
         return "En cours";
       case "FINISH":
-        return "Assigné";
+        return "Terminé";
       default:
         return status;
     }
   };
 
-  const translatePriority = (priority: string) => {
-    switch (priority.toUpperCase()) {
-      case "URGENT":
-        return "Urgente";
-      case "WAIT":
-        return "Pas urgent";
-      default:
-        return priority;
-    }
+  const handleEdit = (id: number) => {
+    router.push(`/technicien-ministere/intervention/edit?interventionId=${id}`);
   };
 
   const handleDelete = async (id: number) => {
@@ -178,16 +155,13 @@ export default function RequestListByUser() {
     });
     if (result.isConfirmed) {
       try {
-        const res = await fetch(`${BASE_URL_API}/request/${id}`, {
+        const res = await fetch(`${BASE_URL_API}/interventions/${id}`, {
           method: "DELETE",
           headers: { "Content-Type": "application/json" },
         });
-        if (!res.ok)
-          throw new Error("Erreur lors de la suppression de la demande");
-        setRequests((prev) =>
-          prev.filter((r) => r.interventionRequestId !== id),
-        );
-        Swal.fire("Supprimé !", "La demande a été supprimée.", "success");
+        if (!res.ok) throw new Error("Erreur lors de la suppression");
+        setInterventions((prev) => prev.filter((i) => i.interventionId !== id));
+        Swal.fire("Supprimé !", "L'intervention a été supprimée.", "success");
       } catch (error) {
         console.error("Erreur :", error);
         Swal.fire(
@@ -199,28 +173,32 @@ export default function RequestListByUser() {
     }
   };
 
-  const filteredRequests = requests.filter((request) => {
-    const matchesSearch = request.description
+  const filteredInterventions = interventions.filter((inter) => {
+    const matchesSearch = inter.description
       .toLowerCase()
       .includes(searchTerm.toLowerCase());
 
     const matchesStatus =
-      statusFilter === "ALL" || request.status.toUpperCase() === statusFilter;
+      statusFilter === "ALL" || inter.status.toUpperCase() === statusFilter;
 
-    return matchesSearch && matchesStatus;
+    const matchesDate = selectedDate
+      ? new Date(inter.dateIntervention).toDateString() ===
+        new Date(selectedDate).toDateString()
+      : true;
+
+    return matchesSearch && matchesStatus && matchesDate;
   });
 
-  const totalPages = Math.ceil(filteredRequests.length / itemsPerPage);
+  const totalPages = Math.ceil(filteredInterventions.length / itemsPerPage);
   const indexOfLast = currentPage * itemsPerPage;
   const indexOfFirst = indexOfLast - itemsPerPage;
-  const currentRequests = filteredRequests.slice(indexOfFirst, indexOfLast);
+  const currentInterventions = filteredInterventions.slice(
+    indexOfFirst,
+    indexOfLast,
+  );
 
   const handlePageChange = (page: number) => {
     if (page >= 1 && page <= totalPages) setCurrentPage(page);
-  };
-
-  const handleAddUser = () => {
-    router.push(`/user-ministere/request-intervention/add`);
   };
 
   return (
@@ -230,7 +208,7 @@ export default function RequestListByUser() {
           <FiSearch className={styles.searchIcon} />
           <input
             type="text"
-            placeholder="Rechercher une demande..."
+            placeholder="Rechercher une intervention..."
             value={searchTerm}
             onChange={(e) => {
               setSearchTerm(e.target.value);
@@ -239,7 +217,31 @@ export default function RequestListByUser() {
             className={styles.searchInput}
           />
         </div>
-        <div className={styles.inlineRow}>
+        <div>
+          <input
+            type="date"
+            value={selectedDate}
+            onChange={(e) => {
+              setSelectedDate(e.target.value);
+              setCurrentPage(1);
+            }}
+            style={{
+              padding: "8px 12px",
+              borderRadius: "10px",
+              border: "1px solid #ccc",
+              color: "#9e9b9bff",
+              fontSize: "14px",
+              fontWeight: 500,
+              outline: "none",
+              cursor: "pointer",
+              transition: "all 0.3s ease",
+              marginTop: "20px",
+            }}
+            onFocus={(e) => (e.target.style.borderColor = "#0070f3")}
+            onBlur={(e) => (e.target.style.borderColor = "#ccc")}
+          />
+        </div>
+        <div>
           <select
             value={statusFilter}
             onChange={(e) => {
@@ -250,42 +252,29 @@ export default function RequestListByUser() {
           >
             <option value="PENDING">En attente</option>
             <option value="IN_PROGRESS">En cours</option>
-            <option value="FINISH">Assigné</option>
+            <option value="FINISH">Terminé</option>
           </select>
-          <div>
-            <button
-              onClick={handleAddUser}
-              style={{ marginTop: "40px" }}
-              className={styles.btnAdd}
-            >
-              <FiPlus /> Ajouter
-            </button>
-          </div>
         </div>
       </div>
 
       <table className={styles.table}>
         <thead className={styles.thead}>
           <tr>
-            <th className={styles.th}>Date de demande</th>
-            <th className={styles.th}>Nom</th>
+            <th className={styles.th}>Date d&apos;intervention</th>
+            <th className={styles.th}>Intervenant</th>
             <th className={styles.th}>Direction</th>
-            <th className={styles.th}>Matériels</th>
             <th className={styles.th}>Description</th>
             <th className={styles.th}>Statut</th>
-            {statusFilter === "PENDING" && (
-              <th className={styles.th}>Priorité</th>
-            )}
-            {statusFilter === "PENDING" && (
+            {(statusFilter === "PENDING" || statusFilter === "IN_PROGRESS") && (
               <th className={styles.th}>Actions</th>
             )}
           </tr>
         </thead>
         <tbody>
-          {currentRequests.map((request) => (
-            <tr key={request.interventionRequestId} className={styles.tr}>
+          {currentInterventions.map((inter) => (
+            <tr key={inter.interventionId} className={styles.tr}>
               <td className={styles.td}>
-                {new Date(request.requestDate).toLocaleString("fr-FR", {
+                {new Date(inter.dateIntervention).toLocaleString("fr-FR", {
                   year: "numeric",
                   month: "long",
                   day: "numeric",
@@ -293,59 +282,50 @@ export default function RequestListByUser() {
                   minute: "2-digit",
                 })}
               </td>
-              <td className={styles.td}>
-                {users?.firstname} {users?.lastname}
-              </td>
-              <td className={styles.td}>{users?.direction}</td>
-              <td className={styles.td}>
-                {request.materials.map((m) => m.name).join(", ")}
-              </td>
-              <td className={styles.td}>{request.description}</td>
+              <td className={styles.td}>{getUserName(inter.usersId)}</td>
+              <td className={styles.td}>{getDirection(inter.usersId)}</td>
+              <td className={styles.td}>{inter.description}</td>
               <td className={styles.td}>
                 <span
-                  className={`${styles.badge} ${statusClass(request.status)}`}
+                  className={`${styles.badge} ${statusClass(inter.status)}`}
                 >
-                  {statusIcon(request.status)}
-                  {translateStatus(request.status)}
+                  {statusIcon(inter.status)}
+                  {translateStatus(inter.status)}
                 </span>
               </td>
-              {statusFilter === "PENDING" && (
-                <td className={styles.td}>
-                  <span
-                    className={`${styles.badge2} ${priorityClass(request.priority)}`}
-                  >
-                    {translatePriority(request.priority)}
-                  </span>
-                </td>
-              )}
-              {statusFilter === "PENDING" && (
-                <td className={styles.td}>
-                  <div className={styles.actions}>
-                    <button
-                      className={`${styles.actionBtn} ${styles.delete}`}
-                      onClick={() =>
-                        handleDelete(request.interventionRequestId)
-                      }
-                      title="Supprimer"
-                    >
-                      <FiTrash2 size={18} />
-                    </button>
-                  </div>
-                </td>
-              )}
+              <td className={styles.td}>
+                <div className={styles.actions}>
+                  {(statusFilter === "PENDING" ||
+                    statusFilter === "IN_PROGRESS") && (
+                    <>
+                      <button
+                        className={`${styles.actionBtn} ${styles.edit}`}
+                        onClick={() => handleEdit(inter.interventionId)}
+                        title="Modifier"
+                      >
+                        <FiEdit size={18} />
+                      </button>
+                    </>
+                  )}
+                  {inter.status.toUpperCase() === "PENDING" && (
+                    <>
+                      <button
+                        className={`${styles.actionBtn} ${styles.delete}`}
+                        onClick={() => handleDelete(inter.interventionId)}
+                        title="Supprimer"
+                      >
+                        <FiTrash2 size={18} />
+                      </button>
+                    </>
+                  )}
+                </div>
+              </td>
             </tr>
           ))}
-          {currentRequests.length === 0 && (
-            <tr
-              style={{
-                textAlign: "center",
-                gap: "10 px",
-                marginBottom: "20px",
-              }}
-            >
-              <td colSpan={7} className={styles.noData}>
-                Vous n&apos;avez pas encore fait une demande
-                d&apos;intervention.
+          {currentInterventions.length === 0 && (
+            <tr>
+              <td colSpan={6} className={styles.noData}>
+                Aucune intervention trouvée
               </td>
             </tr>
           )}

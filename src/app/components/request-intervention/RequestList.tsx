@@ -56,7 +56,8 @@ export default function RequestList() {
   const [users, setUsers] = useState<User[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
-  const [statusFilter, setStatusFilter] = useState<string>("ALL");
+  const [statusFilter, setStatusFilter] = useState<string>("PENDING");
+  const [selectedDate, setSelectedDate] = useState<string>("");
   const itemsPerPage = 6;
   const router = useRouter();
 
@@ -151,7 +152,7 @@ export default function RequestList() {
       case "IN_PROGRESS":
         return "En cours";
       case "FINISH":
-        return "Terminé";
+        return "Assigné";
       default:
         return status;
     }
@@ -169,7 +170,9 @@ export default function RequestList() {
   };
 
   const handleEdit = (id: number) => {
-    router.push(`/admin-ministere/request/edit?interventionRequestId=${id}`);
+    router.push(
+      `/admin-ministere/request-intervention/edit?interventionRequestId=${id}`,
+    );
   };
 
   const handleDelete = async (id: number) => {
@@ -214,7 +217,12 @@ export default function RequestList() {
     const matchesStatus =
       statusFilter === "ALL" || request.status.toUpperCase() === statusFilter;
 
-    return matchesSearch && matchesStatus;
+    const matchesDate = selectedDate
+      ? new Date(request.requestDate).toDateString() ===
+        new Date(selectedDate).toDateString()
+      : true;
+
+    return matchesSearch && matchesStatus && matchesDate;
   });
 
   const totalPages = Math.ceil(filteredRequests.length / itemsPerPage);
@@ -243,6 +251,30 @@ export default function RequestList() {
           />
         </div>
         <div>
+          <input
+            type="date"
+            value={selectedDate}
+            onChange={(e) => {
+              setSelectedDate(e.target.value);
+              setCurrentPage(1);
+            }}
+            style={{
+              padding: "8px 12px",
+              borderRadius: "10px",
+              border: "1px solid #ccc",
+              color: "#9e9b9bff",
+              fontSize: "14px",
+              fontWeight: 500,
+              outline: "none",
+              cursor: "pointer",
+              transition: "all 0.3s ease",
+              marginTop: "20px",
+            }}
+            onFocus={(e) => (e.target.style.borderColor = "#0070f3")}
+            onBlur={(e) => (e.target.style.borderColor = "#ccc")}
+          />
+        </div>
+        <div>
           <select
             value={statusFilter}
             onChange={(e) => {
@@ -251,10 +283,9 @@ export default function RequestList() {
             }}
             className={styles.filterSelect}
           >
-            <option value="ALL">Tous les statuts</option>
             <option value="PENDING">En attente</option>
             <option value="IN_PROGRESS">En cours</option>
-            <option value="FINISH">Terminé</option>
+            <option value="FINISH">Assigné</option>
           </select>
         </div>
       </div>
@@ -268,8 +299,12 @@ export default function RequestList() {
             <th className={styles.th}>Matériels</th>
             <th className={styles.th}>Description</th>
             <th className={styles.th}>Statut</th>
-            <th className={styles.th}>Priorité</th>
-            <th className={styles.th}>Actions</th>
+            {statusFilter === "PENDING" && (
+              <th className={styles.th}>Priorité</th>
+            )}
+            {statusFilter === "PENDING" && (
+              <th className={styles.th}>Actions</th>
+            )}
           </tr>
         </thead>
         <tbody>
@@ -298,36 +333,49 @@ export default function RequestList() {
                   {translateStatus(request.status)}
                 </span>
               </td>
-              <td className={styles.td}>
-                <span
-                  className={`${styles.badge2} ${priorityClass(request.priority)}`}
-                >
-                  {translatePriority(request.priority)}
-                </span>
-              </td>
+              {request.status.toUpperCase() === "PENDING" && (
+                <td className={styles.td}>
+                  <span
+                    className={`${styles.badge2} ${priorityClass(request.priority)}`}
+                  >
+                    {translatePriority(request.priority)}
+                  </span>
+                </td>
+              )}
               <td className={styles.td}>
                 <div className={styles.actions}>
-                  <button
-                    className={`${styles.actionBtn} ${styles.edit}`}
-                    onClick={() => handleEdit(request.interventionRequestId)}
-                    title="Modifier"
-                  >
-                    <FiEdit size={18} />
-                  </button>
-                  <button
-                    className={`${styles.actionBtn} ${styles.delete}`}
-                    onClick={() => handleDelete(request.interventionRequestId)}
-                    title="Supprimer"
-                  >
-                    <FiTrash2 size={18} />
-                  </button>
+                  {request.status.toUpperCase() === "PENDING" && (
+                    <>
+                      <button
+                        className={`${styles.actionBtn} ${styles.edit}`}
+                        onClick={() =>
+                          handleEdit(request.interventionRequestId)
+                        }
+                        title="Modifier"
+                      >
+                        <FiEdit size={18} />
+                      </button>
+                      <button
+                        className={`${styles.actionBtn} ${styles.delete}`}
+                        onClick={() =>
+                          handleDelete(request.interventionRequestId)
+                        }
+                        title="Supprimer"
+                      >
+                        <FiTrash2 size={18} />
+                      </button>
+                    </>
+                  )}
                 </div>
               </td>
             </tr>
           ))}
           {currentRequests.length === 0 && (
             <tr>
-              <td colSpan={7} className={styles.noData}>
+              <td
+                colSpan={statusFilter === "PENDING" ? 8 : 7}
+                className={styles.noData}
+              >
                 Aucune demande trouvée
               </td>
             </tr>
