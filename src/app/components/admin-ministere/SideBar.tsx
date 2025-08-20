@@ -14,6 +14,7 @@ const SideBar: React.FC = () => {
   const router = useRouter();
   const pathname = usePathname();
   const [countNoRole, setCountNoRole] = useState<number>(0);
+  const [countRequest, setCountRequest] = useState<number>(0);
 
   const handleLogout = () => {
     sessionStorage.clear();
@@ -34,12 +35,33 @@ const SideBar: React.FC = () => {
   }, []);
 
   useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch(`${BASE_URL_API}/request/invitation`);
+        const data = await response.json();
+        setCountRequest(data);
+      } catch (error) {
+        console.error("Erreur fetch invitation count:", error);
+      }
+    };
+    fetchData();
+  }, []);
+
+  useEffect(() => {
     const eventSource = new EventSource(`${BASE_URL_API}/invitation`);
 
     eventSource.addEventListener("invitation-count", (event: MessageEvent) => {
       const updatedCount = parseInt(event.data);
       setCountNoRole(updatedCount);
     });
+
+    eventSource.addEventListener(
+      "count-request-intervention",
+      (event: MessageEvent) => {
+        const updatedCount = parseInt(event.data);
+        setCountRequest(updatedCount);
+      },
+    );
 
     eventSource.onerror = (error) => {
       console.error("Erreur SSE:", error);
@@ -115,9 +137,9 @@ const SideBar: React.FC = () => {
           </li>
           <li>
             <Link
-              href="/admin-ministere/organisation"
+              href="/admin-ministere/speciality"
               className={clsx(styles.menuItem, {
-                [styles.active]: pathname === "/admin-ministere/organisation",
+                [styles.active]: pathname === "/admin-ministere/speciality",
               })}
             >
               <FaSitemap />
@@ -134,6 +156,9 @@ const SideBar: React.FC = () => {
             >
               <FaStickyNote />
               <span>Demande d&apos;intervention</span>
+              {countRequest > 0 && (
+                <span className={styles.badge}>{countRequest}</span>
+              )}
             </Link>
           </li>
           <li>

@@ -220,11 +220,10 @@ export default function CreateIntervention() {
             </div>
           </div>
           <label className={styles.label}>Description</label>
-          <input
-            type="text"
-            className={styles.input}
+          <textarea
             {...register("description")}
-            style={{ minHeight: "120px" }}
+            className={styles.input}
+            rows={7}
           />
           {errors.description && (
             <p className={styles.error}>{errors.description.message}</p>

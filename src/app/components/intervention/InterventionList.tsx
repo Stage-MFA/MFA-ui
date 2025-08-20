@@ -132,7 +132,7 @@ export default function InterventionList() {
       case "IN_PROGRESS":
         return "En cours";
       case "FINISH":
-        return "Terminé";
+        return "Demande accépté";
       default:
         return status;
     }
@@ -252,7 +252,7 @@ export default function InterventionList() {
           >
             <option value="PENDING">En attente</option>
             <option value="IN_PROGRESS">En cours</option>
-            <option value="FINISH">Terminé</option>
+            <option value="FINISH">Accépté</option>
           </select>
         </div>
       </div>
