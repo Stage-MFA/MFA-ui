@@ -99,10 +99,10 @@ const SideBar: React.FC = () => {
           </li>
           <li>
             <Link
-              href="/user-ministere/demande-maintenance"
+              href="/technicien-ministere/maintenance"
               className={clsx(styles.menuItem, {
                 [styles.active]:
-                  pathname === "/user-ministere/demande-maintenance",
+                  pathname === "/technicien-ministere/maintenance",
               })}
             >
               <FiTool />

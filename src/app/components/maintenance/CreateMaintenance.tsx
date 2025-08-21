@@ -21,7 +21,6 @@ type Intervention = {
 
 const formSchema = z.object({
   startDate: z.string().min(1, "Date requise"),
-  endDate: z.string().min(1, "Date requise"),
   description: z.string().min(1, "Description invalide"),
   status: z.enum(["PENDING", "IN_PROGRESS", "FINISH"]),
   interventionId: z.number(),
@@ -73,7 +72,6 @@ export default function CreateMaintenance() {
     resolver: zodResolver(formSchema),
     defaultValues: {
       startDate: "",
-      endDate: "",
       description: "",
       status: "IN_PROGRESS",
       interventionId: Number(IdIntervention),
@@ -84,10 +82,7 @@ export default function CreateMaintenance() {
     setIsLoading(true);
     try {
       const { interventionId: id, ...interventionData } = intervention!;
-      const updatedIntervention = {
-        ...interventionData,
-        status: data.status,
-      };
+      const updatedIntervention = { ...interventionData, status: data.status };
 
       const interventionUpdated: InterventionTosave = {
         dateIntervention: updatedIntervention.dateIntervention,
@@ -97,23 +92,27 @@ export default function CreateMaintenance() {
         interventionRequestId: updatedIntervention.interventionRequestId,
       };
 
-      const responseIntervention = await fetch(
-        `${BASE_URL_API}/interventions/${id}`,
-        {
-          method: "PUT",
-          headers: { "content-type": "application/json" },
-          body: JSON.stringify(interventionUpdated),
-        },
-      );
+      await fetch(`${BASE_URL_API}/interventions/${id}`, {
+        method: "PUT",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify(interventionUpdated),
+      });
+
+      const maintenanceData = {
+        startDate: data.startDate,
+        endDate: null,
+        description: data.description,
+        status: data.status,
+        interventionId: Number(IdIntervention),
+      };
 
       const res = await fetch(`${BASE_URL_API}/maintenances`, {
         method: "POST",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify(data),
+        body: JSON.stringify(maintenanceData),
         cache: "no-store",
       });
-      if (!res.ok && responseIntervention.ok)
-        throw new Error("Erreur ajout maintenance");
+      if (!res.ok) throw new Error("Erreur ajout maintenance");
       router.push("/technicien-ministere/maintenance");
     } catch (error) {
       console.log(error);
@@ -156,16 +155,6 @@ export default function CreateMaintenance() {
               />
               {errors.startDate && (
                 <p className={styles.error}>{errors.startDate.message}</p>
-              )}
-
-              <label className={styles.label}>Date fin maintenance</label>
-              <input
-                type="datetime-local"
-                className={styles.input}
-                {...register("endDate")}
-              />
-              {errors.endDate && (
-                <p className={styles.error}>{errors.endDate.message}</p>
               )}
 
               <label className={styles.label}>Description</label>
