@@ -61,16 +61,27 @@ type Maintenance = {
   interventionId: number;
 };
 
-export default function MaintenancesList() {
+export default function MaintenancesByUser() {
   const [maintenances, setMaintenances] = useState<Maintenance[]>([]);
   const [interventions, setInterventions] = useState<Intervention[]>([]);
   const [requests, setRequests] = useState<Request[]>([]);
   const [users, setUsers] = useState<User[]>([]);
+  const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("IN_PROGRESS");
   const [selectedDate, setSelectedDate] = useState<string>("");
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
+
+  useEffect(() => {
+    const email = sessionStorage.getItem("user");
+    if (email) {
+      fetch(`${BASE_URL_API}/users/email?email=${email}`)
+        .then((res) => res.json())
+        .then((data: User) => setCurrentUser(data))
+        .catch((err) => console.error(err));
+    }
+  }, []);
 
   useEffect(() => {
     fetch(`${BASE_URL_API}/maintenances`, { cache: "no-store" })
@@ -160,6 +171,9 @@ export default function MaintenancesList() {
     const req = intervention
       ? getRequest(intervention.interventionRequestId)
       : undefined;
+    const matchesDemandeur = currentUser
+      ? req?.idUser === currentUser.id
+      : false;
     const matchesSearch =
       mnt.description?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       (req &&
@@ -171,7 +185,7 @@ export default function MaintenancesList() {
       ? new Date(mnt.startDate).toDateString() ===
         new Date(selectedDate).toDateString()
       : true;
-    return matchesSearch && matchesStatus && matchesDate;
+    return matchesDemandeur && matchesSearch && matchesStatus && matchesDate;
   });
 
   const totalPages = Math.ceil(filteredMaintenances.length / itemsPerPage);
@@ -185,7 +199,6 @@ export default function MaintenancesList() {
   const handlePageChange = (page: number) => {
     if (page >= 1 && page <= totalPages) setCurrentPage(page);
   };
-
 
   return (
     <div className={styles.container}>
@@ -293,7 +306,7 @@ export default function MaintenancesList() {
           })}
           {currentMaintenances.length === 0 && (
             <tr>
-              <td colSpan={8} className={styles.noData}>
+              <td colSpan={7} className={styles.noData}>
                 Aucune maintenance trouvée
               </td>
             </tr>
