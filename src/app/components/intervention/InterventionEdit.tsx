@@ -200,8 +200,7 @@ export default function InterventionEdit() {
                 <option value="" disabled>
                   -- Choisir --
                 </option>
-                <option value="IN_PROGRESS">IN_PROGRESS</option>
-                <option value="FINISH">FINISH</option>
+                <option value="IN_PROGRESS">En cours</option>
               </select>
             </div>
           </div>

@@ -49,7 +49,6 @@ export default function InterventionList() {
   const itemsPerPage = 6;
   const router = useRouter();
 
-  // Fetch interventions
   useEffect(() => {
     async function fetchInterventions() {
       try {
@@ -69,7 +68,6 @@ export default function InterventionList() {
     fetchInterventions();
   }, []);
 
-  // Fetch users
   useEffect(() => {
     async function fetchUsers() {
       try {
@@ -139,7 +137,17 @@ export default function InterventionList() {
   };
 
   const handleEdit = (id: number) => {
+    alert(
+      "Cette modification indique que votre intervention a débuté et que vous avez accepté la demande.",
+    );
     router.push(`/technicien-ministere/intervention/edit?interventionId=${id}`);
+  };
+
+  const handleCreate = (id: number) => {
+    alert(
+      "Pour clôturer cette intervention, vous devez effectuer une maintenance afin de garantir le bon état du matériel",
+    );
+    router.push(`/technicien-ministere/maintenance/add?interventionId=${id}`);
   };
 
   const handleDelete = async (id: number) => {
@@ -295,12 +303,22 @@ export default function InterventionList() {
               </td>
               <td className={styles.td}>
                 <div className={styles.actions}>
-                  {(statusFilter === "PENDING" ||
-                    statusFilter === "IN_PROGRESS") && (
+                  {statusFilter === "PENDING" && (
                     <>
                       <button
                         className={`${styles.actionBtn} ${styles.edit}`}
                         onClick={() => handleEdit(inter.interventionId)}
+                        title="Modifier"
+                      >
+                        <FiEdit size={18} />
+                      </button>
+                    </>
+                  )}
+                  {statusFilter === "IN_PROGRESS" && (
+                    <>
+                      <button
+                        className={`${styles.actionBtn} ${styles.edit}`}
+                        onClick={() => handleCreate(inter.interventionId)}
                         title="Modifier"
                       >
                         <FiEdit size={18} />
