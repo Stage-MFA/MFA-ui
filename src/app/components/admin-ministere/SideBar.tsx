@@ -126,6 +126,43 @@ const SideBar: React.FC = () => {
           </li>
           <li>
             <Link
+              href="/admin-ministere/request-intervention"
+              className={clsx(styles.menuItem, {
+                [styles.active]:
+                  pathname === "/admin-ministere/request-intervention",
+              })}
+            >
+              <FaStickyNote />
+              <span>Demande d&apos;intervention</span>
+              {countRequest > 0 && (
+                <span className={styles.badge}>{countRequest}</span>
+              )}
+            </Link>
+          </li>
+          <li>
+            <Link
+              href="/admin-ministere/maintenance"
+              className={clsx(styles.menuItem, {
+                [styles.active]: pathname === "/admin-ministere/maintenance",
+              })}
+            >
+              <FiTool />
+              <span>Maintenance</span>
+            </Link>
+          </li>
+          <li>
+            <Link
+              href="/admin-ministere/profile"
+              className={clsx(styles.menuItem, {
+                [styles.active]: pathname === "/admin-ministere/profile",
+              })}
+            >
+              <FiUser />
+              <span>Profile</span>
+            </Link>
+          </li>
+          <li>
+            <Link
               href="/admin-ministere/material"
               className={clsx(styles.menuItem, {
                 [styles.active]: pathname === "/admin-ministere/material",
@@ -144,32 +181,6 @@ const SideBar: React.FC = () => {
             >
               <FaSitemap />
               <span>Organisation</span>
-            </Link>
-          </li>
-          <li>
-            <Link
-              href="/admin-ministere/request-intervention"
-              className={clsx(styles.menuItem, {
-                [styles.active]:
-                  pathname === "/admin-ministere/request-intervention",
-              })}
-            >
-              <FaStickyNote />
-              <span>Demande d&apos;intervention</span>
-              {countRequest > 0 && (
-                <span className={styles.badge}>{countRequest}</span>
-              )}
-            </Link>
-          </li>
-          <li>
-            <Link
-              href="/admin-ministere/profile"
-              className={clsx(styles.menuItem, {
-                [styles.active]: pathname === "/admin-ministere/profile",
-              })}
-            >
-              <FiUser />
-              <span>Profile</span>
             </Link>
           </li>
         </ul>
