@@ -1,7 +1,8 @@
 "use client";
-import React from "react";
-import styles from "@/app/Style/dashboard.module.css";
+import React, { useEffect, useState } from "react";
+import styles from "@/app/style/dashboard.module.css";
 import { Bar, Pie, Line, Doughnut } from "react-chartjs-2";
+import { BASE_URL_API } from "@/lib/constants";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -24,13 +25,13 @@ ChartJS.register(
   LineElement,
   Tooltip,
   Legend,
-  Title,
+  Title
 );
 
-const ChartContainer: React.FC<{
-  title: string;
-  children: React.ReactNode;
-}> = ({ title, children }) => (
+const ChartContainer: React.FC<{ title: string; children: React.ReactNode }> = ({
+  title,
+  children,
+}) => (
   <div className={styles.chartContainer}>
     <h2 className={styles.chartTitle}>{title}</h2>
     <div className={styles.chartContent}>{children}</div>
@@ -38,17 +39,81 @@ const ChartContainer: React.FC<{
 );
 
 const Dashboard: React.FC = () => {
-  const populationTotale = {
-    labels: ["2021", "2022", "2023", "2024"],
-    datasets: [
-      {
-        label: "Population totale",
-        data: [25000, 27000, 29000, 31000],
-        backgroundColor: "#fa8789",
-      },
-    ],
-  };
+  const [years, setYears] = useState<number[]>([]);
+  const [selectedYear, setSelectedYear] = useState<number>(
+    new Date().getFullYear()
+  );
+  const [variationData, setVariationData] = useState<any>(null);
 
+  const MONTH_LABELS = [
+    "Jan",
+    "Fév",
+    "Mar",
+    "Avr",
+    "Mai",
+    "Juin",
+    "Juil",
+    "Août",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Déc",
+  ];
+
+  // Récupère les années possibles
+  useEffect(() => {
+    fetch(`${BASE_URL_API}/request/years-possibles`)
+      .then((res) => res.json())
+      .then((data) => {
+        setYears(data);
+        if (data.includes(new Date().getFullYear())) {
+          setSelectedYear(new Date().getFullYear());
+        } else {
+          setSelectedYear(data[0]);
+        }
+      })
+      .catch((err) => console.error("Erreur fetch years:", err));
+  }, []);
+
+  // Récupère les variations de l’année sélectionnée
+  useEffect(() => {
+    if (!selectedYear) return;
+    fetch(`${BASE_URL_API}/request/variation-by-years?year=${selectedYear}`)
+      .then((res) => res.json())
+      .then((data) => setVariationData(data))
+      .catch((err) => console.error("Erreur fetch variation:", err));
+  }, [selectedYear]);
+
+  // 📊 Transforme les données par mois (au lieu de par jour)
+  const demandeInterventionTotal = variationData
+    ? (() => {
+        const monthlyData = Array(12).fill(0);
+
+        Object.entries(variationData.variation).forEach(
+          ([date, values]: [string, any]) => {
+            const monthIndex = new Date(date).getMonth(); // 0 = Janvier
+            const totalForDay = (Object.values(values) as number[]).reduce(
+              (a, b) => a + b,
+              0
+            );
+            monthlyData[monthIndex] += totalForDay;
+          }
+        );
+
+        return {
+          labels: MONTH_LABELS,
+          datasets: [
+            {
+              label: `Demandes ${selectedYear}`,
+              data: monthlyData,
+              backgroundColor: "#fa8789",
+            },
+          ],
+        };
+      })()
+    : { labels: MONTH_LABELS, datasets: [] };
+
+  // --- Données statiques ---
   const repartitionSexe = {
     labels: ["Hommes", "Femmes"],
     datasets: [
@@ -59,11 +124,11 @@ const Dashboard: React.FC = () => {
     ],
   };
 
-  const tauxNatalite = {
+  const tauxIntervention = {
     labels: ["2021", "2022", "2023", "2024"],
     datasets: [
       {
-        label: "Taux de natalité",
+        label: "Taux d'intervention",
         data: [2.1, 2.3, 2.2, 2.4],
         borderColor: "#22c55e",
         backgroundColor: "#bbf7d0",
@@ -73,7 +138,7 @@ const Dashboard: React.FC = () => {
     ],
   };
 
-  const tauxMortalite = {
+  const tauxInterventionResolu = {
     labels: ["2021", "2022", "2023", "2024"],
     datasets: [
       {
@@ -88,20 +153,7 @@ const Dashboard: React.FC = () => {
   };
 
   const croissanceMensuelle = {
-    labels: [
-      "Jan",
-      "Fév",
-      "Mar",
-      "Avr",
-      "Mai",
-      "Juin",
-      "Juil",
-      "Août",
-      "Sep",
-      "Oct",
-      "Nov",
-      "Déc",
-    ],
+    labels: MONTH_LABELS,
     datasets: [
       {
         label: "Croissance mensuelle (%)",
@@ -116,11 +168,11 @@ const Dashboard: React.FC = () => {
     ],
   };
 
-  const trancheAge = {
+  const user = {
     labels: ["0-14", "15-24", "25-54", "55-64", "65+"],
     datasets: [
       {
-        label: "Répartition par âge",
+        label: "Employé par post",
         data: [30, 18, 35, 10, 7],
         backgroundColor: [
           "#fa8789",
@@ -137,29 +189,29 @@ const Dashboard: React.FC = () => {
     labels: ["2025", "2026", "2027", "2028"],
     datasets: [
       {
-        label: "Prévisions démographiques",
+        label: "Prévisions intervention",
         data: [32000, 33500, 35000, 36500],
         backgroundColor: "#fa8789",
       },
     ],
   };
 
-  const communesParProvince = {
+  const interventionPartechnicien = {
     labels: ["Analamanga", "Atsinanana", "Boeny", "Haute Matsiatra", "SAVA"],
     datasets: [
       {
-        label: "Nombre de communes",
+        label: "Intervention par employé",
         data: [90, 75, 60, 80, 55],
         backgroundColor: "#57fa90",
       },
     ],
   };
 
-  const populationParProvince = {
+  const maintenanvePerTechnicien = {
     labels: ["Analamanga", "Atsinanana", "Boeny", "Haute Matsiatra", "SAVA"],
     datasets: [
       {
-        label: "Population (en milliers)",
+        label: "Maintenances par technicien",
         data: [3200, 1800, 1400, 2000, 1600],
         backgroundColor: "#ef4444",
       },
@@ -177,8 +229,45 @@ const Dashboard: React.FC = () => {
   return (
     <div className={styles.root}>
       <div className={styles.grid}>
-        <ChartContainer title="Population totale">
-          <Bar data={populationTotale} options={smallChartOptions} />
+        <ChartContainer title="Taux intervention en cours">
+          <Line data={tauxIntervention} options={smallChartOptions} />
+        </ChartContainer>
+
+        <ChartContainer title="Taux intervention résolu">
+          <Line data={tauxInterventionResolu} options={smallChartOptions} />
+        </ChartContainer>
+
+        <ChartContainer title="Prévisions intervention">
+          <Bar data={previsions} options={smallChartOptions} />
+        </ChartContainer>
+
+        <ChartContainer title={`Demande intervention (${selectedYear})`}>
+          <div style={{ marginBottom: "20px" }}>
+            <label style={{ marginRight: "10px" }}>Année :</label>
+            <select
+              value={selectedYear}
+              onChange={(e) => setSelectedYear(Number(e.target.value))}
+            >
+              {years.map((y) => (
+                <option key={y} value={y}>
+                  {y}
+                </option>
+              ))}
+            </select>
+          </div>
+          <Bar data={demandeInterventionTotal} options={smallChartOptions} />
+        </ChartContainer>
+
+        <ChartContainer title="Maintenances">
+          <Line data={croissanceMensuelle} options={smallChartOptions} />
+        </ChartContainer>
+
+        <ChartContainer title="Maintenance par technicien">
+          <Bar data={maintenanvePerTechnicien} options={smallChartOptions} />
+        </ChartContainer>
+
+        <ChartContainer title="Intervention par technicien">
+          <Bar data={interventionPartechnicien} options={smallChartOptions} />
         </ChartContainer>
 
         <ChartContainer title="Répartition par sexe">
@@ -191,38 +280,14 @@ const Dashboard: React.FC = () => {
           />
         </ChartContainer>
 
-        <ChartContainer title="Taux de natalité">
-          <Line data={tauxNatalite} options={smallChartOptions} />
-        </ChartContainer>
-
-        <ChartContainer title="Taux de mortalité">
-          <Line data={tauxMortalite} options={smallChartOptions} />
-        </ChartContainer>
-
-        <ChartContainer title="Taux de croissance mensuelle">
-          <Line data={croissanceMensuelle} options={smallChartOptions} />
-        </ChartContainer>
-
-        <ChartContainer title="Répartition par tranche d’âge">
+        <ChartContainer title="Répartition employé">
           <Doughnut
-            data={trancheAge}
+            data={user}
             options={{
               ...smallChartOptions,
               plugins: { legend: { position: "bottom" } },
             }}
           />
-        </ChartContainer>
-
-        <ChartContainer title="Prévisions démographiques">
-          <Bar data={previsions} options={smallChartOptions} />
-        </ChartContainer>
-
-        <ChartContainer title="Communes par province">
-          <Bar data={communesParProvince} options={smallChartOptions} />
-        </ChartContainer>
-
-        <ChartContainer title="Population par province">
-          <Bar data={populationParProvince} options={smallChartOptions} />
         </ChartContainer>
       </div>
     </div>

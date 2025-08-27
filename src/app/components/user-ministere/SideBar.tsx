@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import styles from "@/app/Style/sideBar.module.css";
+import styles from "@/app/style/sideBar.module.css";
 import { FaSignOutAlt } from "react-icons/fa";
 import { FiUser, FiTool, FiBookOpen } from "react-icons/fi";
 import { useRouter, usePathname } from "next/navigation";

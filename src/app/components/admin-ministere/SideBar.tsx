@@ -1,6 +1,6 @@
 "use client";
 
-import styles from "@/app/Style/sideBar.module.css";
+import styles from "@/app/style/sideBar.module.css";
 import { FaHome, FaSignOutAlt, FaSitemap, FaStickyNote } from "react-icons/fa";
 import { FiUser, FiSend, FiTool, FiBookOpen } from "react-icons/fi";
 import { useRouter, usePathname } from "next/navigation";
