@@ -5,7 +5,6 @@ import { BASE_URL_API } from "@/lib/constants";
 import { FiSearch, FiClock, FiLoader, FiCheckCircle } from "react-icons/fi";
 import styles from "@/app/style/user.module.css";
 
-
 type Role = {
   id: number;
   name: string;
@@ -186,7 +185,6 @@ export default function MaintenancesList() {
     if (page >= 1 && page <= totalPages) setCurrentPage(page);
   };
 
-
   return (
     <div className={styles.container}>
       <div className={styles.header}>
@@ -207,6 +205,18 @@ export default function MaintenancesList() {
           <input
             type="date"
             value={selectedDate}
+            style={{
+              padding: "8px 12px",
+              borderRadius: "10px",
+              border: "1px solid #ccc",
+              color: "#9e9b9bff",
+              fontSize: "14px",
+              fontWeight: 500,
+              outline: "none",
+              cursor: "pointer",
+              transition: "all 0.3s ease",
+              marginTop: "20px",
+            }}
             onChange={(e) => {
               setSelectedDate(e.target.value);
               setCurrentPage(1);

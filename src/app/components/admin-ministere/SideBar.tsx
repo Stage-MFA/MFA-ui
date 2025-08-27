@@ -2,7 +2,7 @@
 
 import styles from "@/app/Style/sideBar.module.css";
 import { FaHome, FaSignOutAlt, FaSitemap, FaStickyNote } from "react-icons/fa";
-import { FiUser, FiSend, FiTool } from "react-icons/fi";
+import { FiUser, FiSend, FiTool, FiBookOpen } from "react-icons/fi";
 import { useRouter, usePathname } from "next/navigation";
 import { BASE_URL_FRONTEND, BASE_URL_API } from "@/lib/constants";
 import Image from "next/image";
@@ -150,6 +150,18 @@ const SideBar: React.FC = () => {
               <span>Maintenance</span>
             </Link>
           </li>
+          <li>
+            <Link
+              href="/admin-ministere/journal"
+              className={clsx(styles.menuItem, {
+                [styles.active]: pathname === "/admin-ministere/journal",
+              })}
+            >
+              <FiBookOpen />
+              <span>Journal</span>
+            </Link>
+          </li>
+
           <li>
             <Link
               href="/admin-ministere/profile"

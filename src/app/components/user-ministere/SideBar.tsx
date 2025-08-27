@@ -2,7 +2,7 @@
 import React from "react";
 import styles from "@/app/Style/sideBar.module.css";
 import { FaSignOutAlt } from "react-icons/fa";
-import { FiUser, FiTool } from "react-icons/fi";
+import { FiUser, FiTool, FiBookOpen } from "react-icons/fi";
 import { useRouter, usePathname } from "next/navigation";
 import { BASE_URL_FRONTEND } from "@/lib/constants";
 import Image from "next/image";
@@ -56,16 +56,26 @@ const SideBar: React.FC = () => {
               <span>Signaler une panne</span>
             </Link>
           </li>
-           <li>
+          <li>
             <Link
               href="/user-ministere/maintenance"
               className={clsx(styles.menuItem, {
-                [styles.active]:
-                  pathname === "/user-ministere/maintenance",
+                [styles.active]: pathname === "/user-ministere/maintenance",
               })}
             >
               <FiTool />
               <span>Maintenance</span>
+            </Link>
+          </li>
+          <li>
+            <Link
+              href="/user-ministere/journal"
+              className={clsx(styles.menuItem, {
+                [styles.active]: pathname === "/user-ministere/journal",
+              })}
+            >
+              <FiBookOpen />
+              <span>Journal</span>
             </Link>
           </li>
         </ul>

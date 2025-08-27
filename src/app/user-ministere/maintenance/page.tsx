@@ -1,5 +1,5 @@
-import MaintenancesByUser from "@/app/components/maintenance/MaintenanceListByUser"
+import MaintenancesByUser from "@/app/components/maintenance/MaintenanceListByUser";
 
-export default function getListMaintenancesByUser(){
-    return <MaintenancesByUser/>
+export default function getListMaintenancesByUser() {
+  return <MaintenancesByUser />;
 }

@@ -1,4 +1,4 @@
-import UpdateMaintenance from "@/app/components/maintenance/UpdateMaintenance";
+import CreateJournal from "@/app/components/journal/CreateJournal";
 export default function EditMaintenancePage() {
-  return <UpdateMaintenance />;
+  return <CreateJournal />;
 }

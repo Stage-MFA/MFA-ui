@@ -227,6 +227,18 @@ export default function MaintenancesList() {
           <input
             type="date"
             value={selectedDate}
+            style={{
+              padding: "8px 12px",
+              borderRadius: "10px",
+              border: "1px solid #ccc",
+              color: "#9e9b9bff",
+              fontSize: "14px",
+              fontWeight: 500,
+              outline: "none",
+              cursor: "pointer",
+              transition: "all 0.3s ease",
+              marginTop: "20px",
+            }}
             onChange={(e) => {
               setSelectedDate(e.target.value);
               setCurrentPage(1);
