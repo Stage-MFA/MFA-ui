@@ -1,4 +1,5 @@
 "use client";
+
 import React, { useEffect, useState } from "react";
 import styles from "@/app/style/dashboard.module.css";
 import { Bar, Pie, Line, Doughnut } from "react-chartjs-2";
@@ -28,6 +29,18 @@ ChartJS.register(
   Title
 );
 
+
+interface VariationDayValues {
+  [key: string]: number; 
+}
+
+interface VariationData {
+  variation: {
+    [date: string]: VariationDayValues; 
+  };
+}
+
+
 const ChartContainer: React.FC<{ title: string; children: React.ReactNode }> = ({
   title,
   children,
@@ -40,62 +53,42 @@ const ChartContainer: React.FC<{ title: string; children: React.ReactNode }> = (
 
 const Dashboard: React.FC = () => {
   const [years, setYears] = useState<number[]>([]);
-  const [selectedYear, setSelectedYear] = useState<number>(
-    new Date().getFullYear()
-  );
-  const [variationData, setVariationData] = useState<any>(null);
+  const [selectedYear, setSelectedYear] = useState<number>(new Date().getFullYear());
+  const [variationData, setVariationData] = useState<VariationData | null>(null);
 
   const MONTH_LABELS = [
-    "Jan",
-    "Fév",
-    "Mar",
-    "Avr",
-    "Mai",
-    "Juin",
-    "Juil",
-    "Août",
-    "Sep",
-    "Oct",
-    "Nov",
-    "Déc",
+    "Jan", "Fév", "Mar", "Avr", "Mai", "Juin",
+    "Juil", "Août", "Sep", "Oct", "Nov", "Déc",
   ];
 
-  // Récupère les années possibles
+  
   useEffect(() => {
     fetch(`${BASE_URL_API}/request/years-possibles`)
       .then((res) => res.json())
-      .then((data) => {
+      .then((data: number[]) => {
         setYears(data);
-        if (data.includes(new Date().getFullYear())) {
-          setSelectedYear(new Date().getFullYear());
-        } else {
-          setSelectedYear(data[0]);
-        }
+        setSelectedYear(data.includes(new Date().getFullYear()) ? new Date().getFullYear() : data[0]);
       })
       .catch((err) => console.error("Erreur fetch years:", err));
   }, []);
 
-  // Récupère les variations de l’année sélectionnée
+  
   useEffect(() => {
     if (!selectedYear) return;
     fetch(`${BASE_URL_API}/request/variation-by-years?year=${selectedYear}`)
       .then((res) => res.json())
-      .then((data) => setVariationData(data))
+      .then((data: VariationData) => setVariationData(data))
       .catch((err) => console.error("Erreur fetch variation:", err));
   }, [selectedYear]);
 
-  // 📊 Transforme les données par mois (au lieu de par jour)
+  
   const demandeInterventionTotal = variationData
     ? (() => {
         const monthlyData = Array(12).fill(0);
-
         Object.entries(variationData.variation).forEach(
-          ([date, values]: [string, any]) => {
-            const monthIndex = new Date(date).getMonth(); // 0 = Janvier
-            const totalForDay = (Object.values(values) as number[]).reduce(
-              (a, b) => a + b,
-              0
-            );
+          ([date, values]: [string, VariationDayValues]) => {
+            const monthIndex = new Date(date).getMonth();
+            const totalForDay = Object.values(values).reduce((a, b) => a + b, 0);
             monthlyData[monthIndex] += totalForDay;
           }
         );
@@ -113,14 +106,11 @@ const Dashboard: React.FC = () => {
       })()
     : { labels: MONTH_LABELS, datasets: [] };
 
-  // --- Données statiques ---
+  
   const repartitionSexe = {
     labels: ["Hommes", "Femmes"],
     datasets: [
-      {
-        data: [52, 48],
-        backgroundColor: ["#57fa90", "#fa8789"],
-      },
+      { data: [52, 48], backgroundColor: ["#57fa90", "#fa8789"] },
     ],
   };
 
@@ -157,9 +147,7 @@ const Dashboard: React.FC = () => {
     datasets: [
       {
         label: "Croissance mensuelle (%)",
-        data: [
-          0.2, 0.3, 0.25, 0.28, 0.3, 0.32, 0.31, 0.29, 0.3, 0.33, 0.34, 0.35,
-        ],
+        data: [0.2, 0.3, 0.25, 0.28, 0.3, 0.32, 0.31, 0.29, 0.3, 0.33, 0.34, 0.35],
         borderColor: "#22c55e",
         backgroundColor: "#bbf7d0",
         fill: true,
@@ -174,13 +162,7 @@ const Dashboard: React.FC = () => {
       {
         label: "Employé par post",
         data: [30, 18, 35, 10, 7],
-        backgroundColor: [
-          "#fa8789",
-          "#bbf7d0",
-          "#ef4444",
-          "#22c55e",
-          "#bbf7d0",
-        ],
+        backgroundColor: ["#fa8789", "#bbf7d0", "#ef4444", "#22c55e", "#bbf7d0"],
       },
     ],
   };
@@ -196,34 +178,24 @@ const Dashboard: React.FC = () => {
     ],
   };
 
-  const interventionPartechnicien = {
+  const interventionParTechnicien = {
     labels: ["Analamanga", "Atsinanana", "Boeny", "Haute Matsiatra", "SAVA"],
     datasets: [
-      {
-        label: "Intervention par employé",
-        data: [90, 75, 60, 80, 55],
-        backgroundColor: "#57fa90",
-      },
+      { label: "Intervention par employé", data: [90, 75, 60, 80, 55], backgroundColor: "#57fa90" },
     ],
   };
 
-  const maintenanvePerTechnicien = {
+  const maintenanceParTechnicien = {
     labels: ["Analamanga", "Atsinanana", "Boeny", "Haute Matsiatra", "SAVA"],
     datasets: [
-      {
-        label: "Maintenances par technicien",
-        data: [3200, 1800, 1400, 2000, 1600],
-        backgroundColor: "#ef4444",
-      },
+      { label: "Maintenances par technicien", data: [3200, 1800, 1400, 2000, 1600], backgroundColor: "#ef4444" },
     ],
   };
 
   const smallChartOptions = {
     responsive: true,
     maintainAspectRatio: false,
-    plugins: {
-      legend: { display: false },
-    },
+    plugins: { legend: { display: false } },
   };
 
   return (
@@ -242,16 +214,11 @@ const Dashboard: React.FC = () => {
         </ChartContainer>
 
         <ChartContainer title={`Demande intervention (${selectedYear})`}>
-          <div style={{ marginBottom: "20px" }}>
-            <label style={{ marginRight: "10px" }}>Année :</label>
-            <select
-              value={selectedYear}
-              onChange={(e) => setSelectedYear(Number(e.target.value))}
-            >
+          <div style={{ marginBottom: 20 }}>
+            <label style={{ marginRight: 10 }}>Année :</label>
+            <select value={selectedYear} onChange={(e) => setSelectedYear(Number(e.target.value))}>
               {years.map((y) => (
-                <option key={y} value={y}>
-                  {y}
-                </option>
+                <option key={y} value={y}>{y}</option>
               ))}
             </select>
           </div>
@@ -263,31 +230,19 @@ const Dashboard: React.FC = () => {
         </ChartContainer>
 
         <ChartContainer title="Maintenance par technicien">
-          <Bar data={maintenanvePerTechnicien} options={smallChartOptions} />
+          <Bar data={maintenanceParTechnicien} options={smallChartOptions} />
         </ChartContainer>
 
         <ChartContainer title="Intervention par technicien">
-          <Bar data={interventionPartechnicien} options={smallChartOptions} />
+          <Bar data={interventionParTechnicien} options={smallChartOptions} />
         </ChartContainer>
 
         <ChartContainer title="Répartition par sexe">
-          <Pie
-            data={repartitionSexe}
-            options={{
-              ...smallChartOptions,
-              plugins: { legend: { position: "bottom" } },
-            }}
-          />
+          <Pie data={repartitionSexe} options={{ ...smallChartOptions, plugins: { legend: { position: "bottom" } } }} />
         </ChartContainer>
 
         <ChartContainer title="Répartition employé">
-          <Doughnut
-            data={user}
-            options={{
-              ...smallChartOptions,
-              plugins: { legend: { position: "bottom" } },
-            }}
-          />
+          <Doughnut data={user} options={{ ...smallChartOptions, plugins: { legend: { position: "bottom" } } }} />
         </ChartContainer>
       </div>
     </div>
