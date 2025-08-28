@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { BASE_URL_API, BASE_URL_FRONTEND} from "@/lib/constants";
+import { BASE_URL_API, BASE_URL_FRONTEND } from "@/lib/constants";
 import { FiEdit, FiTrash2, FiSearch, FiPlus } from "react-icons/fi";
 import styles from "@/app/style/user.module.css";
 import Swal from "sweetalert2";
@@ -30,10 +30,6 @@ export default function Users() {
   const itemsPerPage = 8;
   const router = useRouter();
 
-  useEffect(() => {
-    router.prefetch(`${BASE_URL_FRONTEND}/user/add`);
-    router.prefetch(`${BASE_URL_API}/user/edit-role`);
-  }, [router]);
 
   useEffect(() => {
     async function fetchUsers() {
@@ -52,13 +48,15 @@ export default function Users() {
           (user) => user.roleResDto.length > 0,
         );
         setUsers(usersWithRoles);
+        router.prefetch(`${BASE_URL_FRONTEND}/admin-ministere/user/add`);
+        router.prefetch(`${BASE_URL_FRONTEND}/admin-ministere/user/edit-role`);
       } catch (error) {
         console.error(error);
       }
     }
 
     fetchUsers();
-  }, []);
+  }, [router]);
 
   const handleAddUser = () => {
     router.push("/admin-ministere/user/add");
