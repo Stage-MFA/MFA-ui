@@ -63,13 +63,13 @@ export default function Home() {
 
       switch (result.roles) {
         case "ADMIN":
-          router.push(`${BASE_URL_FRONTEND}/admin-ministere`);
+          router.prefetch(`${BASE_URL_FRONTEND}/admin-ministere`);
           break;
         case "USER":
-          router.push(`${BASE_URL_FRONTEND}/user-ministere`);
+          router.prefetch(`${BASE_URL_FRONTEND}/user-ministere`);
           break;
         case "TECHNICIAN":
-          router.push(`${BASE_URL_FRONTEND}/technicien-ministere`);
+          router.prefetch(`${BASE_URL_FRONTEND}/technicien-ministere`);
           break;
         default:
           alert("Rôle inconnu. Veuillez contacter l'administrateur.");
