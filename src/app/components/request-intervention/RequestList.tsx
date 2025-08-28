@@ -170,6 +170,9 @@ export default function RequestList() {
   };
 
   const handleEdit = (id: number) => {
+    router.prefetch(
+      `/admin-ministere/request-intervention/edit?interventionRequestId=${id}`,
+    );
     router.push(
       `/admin-ministere/request-intervention/edit?interventionRequestId=${id}`,
     );

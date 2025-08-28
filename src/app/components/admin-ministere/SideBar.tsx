@@ -96,7 +96,7 @@ const SideBar: React.FC = () => {
               })}
             >
               <FaHome />
-              <span>Dashboard</span>
+              <span>Utilisateur</span>
             </Link>
           </li>
           <li>
@@ -107,7 +107,7 @@ const SideBar: React.FC = () => {
               })}
             >
               <FiUser />
-              <span>User</span>
+              <span>Utilisateur</span>
             </Link>
           </li>
           <li>
@@ -201,7 +201,7 @@ const SideBar: React.FC = () => {
       <div className={styles.footer}>
         <button className={styles.logoutBtn} onClick={handleLogout}>
           <FaSignOutAlt />
-          Déconnexion
+          <span>Déconnexion</span>
         </button>
       </div>
     </aside>
