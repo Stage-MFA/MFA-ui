@@ -56,7 +56,6 @@ export default function UsersWithoutRole({
         );
         setUsers(usersWithoutRoles);
         setCountNoRole(usersWithoutRoles.length);
-        router.prefetch(`${BASE_URL_FRONTEND}/admin-ministere/user/edit-role`);
         if (onCountReady) onCountReady(usersWithoutRoles.length);
       } catch (error) {
         console.error(error);
@@ -136,6 +135,7 @@ export default function UsersWithoutRole({
   };
 
   const handleEditRole = (email: string) => {
+    router.prefetch(`${BASE_URL_FRONTEND}/admin-ministere/user/edit-role`);
     router.push(`/admin-ministere/user/edit-role?email=${email}`);
   };
 

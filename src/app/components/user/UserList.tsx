@@ -48,17 +48,16 @@ export default function Users() {
           (user) => user.roleResDto.length > 0,
         );
         setUsers(usersWithRoles);
-        router.prefetch(`${BASE_URL_FRONTEND}/admin-ministere/user/add`);
-        router.prefetch(`${BASE_URL_FRONTEND}/admin-ministere/user/edit-role`);
       } catch (error) {
         console.error(error);
       }
     }
 
     fetchUsers();
-  }, [router]);
+  }, []);
 
   const handleAddUser = () => {
+    router.prefetch(`${BASE_URL_FRONTEND}/admin-ministere/user/add`);
     router.push("/admin-ministere/user/add");
   };
 
@@ -113,6 +112,7 @@ export default function Users() {
   };
 
   const handleEditRole = (email: string) => {
+    router.prefetch(`${BASE_URL_FRONTEND}/admin-ministere/user/edit-role`);
     router.push(`/admin-ministere/user/edit-role?email=${email}`);
   };
 
