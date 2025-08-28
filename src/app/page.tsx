@@ -32,7 +32,12 @@ export default function Home() {
   });
 
   useEffect(()=>{
+    router.prefetch(`${BASE_URL_FRONTEND}/inscription`);
+    router.prefetch(`${BASE_URL_FRONTEND}/user/email`);
+    router.prefetch(`${BASE_URL_FRONTEND}`);
     router.prefetch(`${BASE_URL_FRONTEND}/admin-ministere`);
+    router.prefetch(`${BASE_URL_FRONTEND}/user-ministere`);
+    router.prefetch(`${BASE_URL_FRONTEND}/technicien-ministere`);
   }, [router])
 
   const onSubmit = async (data: FormValues) => {
