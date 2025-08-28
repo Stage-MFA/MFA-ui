@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { BASE_URL_API,BASE_URL_FRONTEND } from "@/lib/constants";
+import { BASE_URL_API, BASE_URL_FRONTEND } from "@/lib/constants";
 import { FiEdit, FiTrash2, FiSearch } from "react-icons/fi";
 import styles from "@/app/style/user.module.css";
 import Swal from "sweetalert2";
@@ -226,8 +226,9 @@ export default function UsersWithoutRole({
           <button
             key={index}
             onClick={() => handlePageChange(index + 1)}
-            className={`${styles.pageButton} ${currentPage === index + 1 ? styles.activePage : ""
-              }`}
+            className={`${styles.pageButton} ${
+              currentPage === index + 1 ? styles.activePage : ""
+            }`}
           >
             {index + 1}
           </button>

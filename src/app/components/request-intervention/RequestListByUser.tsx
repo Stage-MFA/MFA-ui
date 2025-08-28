@@ -220,7 +220,7 @@ export default function RequestListByUser() {
   };
 
   const handleAddUser = () => {
-    router.prefetch(`/user-ministere/request-intervention/add`)
+    router.prefetch(`/user-ministere/request-intervention/add`);
     router.push(`/user-ministere/request-intervention/add`);
   };
 

@@ -100,7 +100,7 @@ export default function Materials() {
   };
 
   const handleEditMaterial = (materialId: number) => {
-    router.prefetch(`/admin-ministere/material/edit?materialId=${materialId}`)
+    router.prefetch(`/admin-ministere/material/edit?materialId=${materialId}`);
     router.push(`/admin-ministere/material/edit?materialId=${materialId}`);
   };
 

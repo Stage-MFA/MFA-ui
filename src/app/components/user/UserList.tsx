@@ -30,7 +30,6 @@ export default function Users() {
   const itemsPerPage = 8;
   const router = useRouter();
 
-
   useEffect(() => {
     async function fetchUsers() {
       try {

@@ -26,25 +26,23 @@ ChartJS.register(
   LineElement,
   Tooltip,
   Legend,
-  Title
+  Title,
 );
 
-
 interface VariationDayValues {
-  [key: string]: number; 
+  [key: string]: number;
 }
 
 interface VariationData {
   variation: {
-    [date: string]: VariationDayValues; 
+    [date: string]: VariationDayValues;
   };
 }
 
-
-const ChartContainer: React.FC<{ title: string; children: React.ReactNode }> = ({
-  title,
-  children,
-}) => (
+const ChartContainer: React.FC<{
+  title: string;
+  children: React.ReactNode;
+}> = ({ title, children }) => (
   <div className={styles.chartContainer}>
     <h2 className={styles.chartTitle}>{title}</h2>
     <div className={styles.chartContent}>{children}</div>
@@ -53,26 +51,42 @@ const ChartContainer: React.FC<{ title: string; children: React.ReactNode }> = (
 
 const Dashboard: React.FC = () => {
   const [years, setYears] = useState<number[]>([]);
-  const [selectedYear, setSelectedYear] = useState<number>(new Date().getFullYear());
-  const [variationData, setVariationData] = useState<VariationData | null>(null);
+  const [selectedYear, setSelectedYear] = useState<number>(
+    new Date().getFullYear(),
+  );
+  const [variationData, setVariationData] = useState<VariationData | null>(
+    null,
+  );
 
   const MONTH_LABELS = [
-    "Jan", "Fév", "Mar", "Avr", "Mai", "Juin",
-    "Juil", "Août", "Sep", "Oct", "Nov", "Déc",
+    "Jan",
+    "Fév",
+    "Mar",
+    "Avr",
+    "Mai",
+    "Juin",
+    "Juil",
+    "Août",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Déc",
   ];
 
-  
   useEffect(() => {
     fetch(`${BASE_URL_API}/request/years-possibles`)
       .then((res) => res.json())
       .then((data: number[]) => {
         setYears(data);
-        setSelectedYear(data.includes(new Date().getFullYear()) ? new Date().getFullYear() : data[0]);
+        setSelectedYear(
+          data.includes(new Date().getFullYear())
+            ? new Date().getFullYear()
+            : data[0],
+        );
       })
       .catch((err) => console.error("Erreur fetch years:", err));
   }, []);
 
-  
   useEffect(() => {
     if (!selectedYear) return;
     fetch(`${BASE_URL_API}/request/variation-by-years?year=${selectedYear}`)
@@ -81,16 +95,18 @@ const Dashboard: React.FC = () => {
       .catch((err) => console.error("Erreur fetch variation:", err));
   }, [selectedYear]);
 
-  
   const demandeInterventionTotal = variationData
     ? (() => {
         const monthlyData = Array(12).fill(0);
         Object.entries(variationData.variation).forEach(
           ([date, values]: [string, VariationDayValues]) => {
             const monthIndex = new Date(date).getMonth();
-            const totalForDay = Object.values(values).reduce((a, b) => a + b, 0);
+            const totalForDay = Object.values(values).reduce(
+              (a, b) => a + b,
+              0,
+            );
             monthlyData[monthIndex] += totalForDay;
-          }
+          },
         );
 
         return {
@@ -106,12 +122,9 @@ const Dashboard: React.FC = () => {
       })()
     : { labels: MONTH_LABELS, datasets: [] };
 
-  
   const repartitionSexe = {
     labels: ["Hommes", "Femmes"],
-    datasets: [
-      { data: [52, 48], backgroundColor: ["#57fa90", "#fa8789"] },
-    ],
+    datasets: [{ data: [52, 48], backgroundColor: ["#57fa90", "#fa8789"] }],
   };
 
   const tauxIntervention = {
@@ -147,7 +160,9 @@ const Dashboard: React.FC = () => {
     datasets: [
       {
         label: "Croissance mensuelle (%)",
-        data: [0.2, 0.3, 0.25, 0.28, 0.3, 0.32, 0.31, 0.29, 0.3, 0.33, 0.34, 0.35],
+        data: [
+          0.2, 0.3, 0.25, 0.28, 0.3, 0.32, 0.31, 0.29, 0.3, 0.33, 0.34, 0.35,
+        ],
         borderColor: "#22c55e",
         backgroundColor: "#bbf7d0",
         fill: true,
@@ -162,7 +177,13 @@ const Dashboard: React.FC = () => {
       {
         label: "Employé par post",
         data: [30, 18, 35, 10, 7],
-        backgroundColor: ["#fa8789", "#bbf7d0", "#ef4444", "#22c55e", "#bbf7d0"],
+        backgroundColor: [
+          "#fa8789",
+          "#bbf7d0",
+          "#ef4444",
+          "#22c55e",
+          "#bbf7d0",
+        ],
       },
     ],
   };
@@ -181,14 +202,22 @@ const Dashboard: React.FC = () => {
   const interventionParTechnicien = {
     labels: ["Analamanga", "Atsinanana", "Boeny", "Haute Matsiatra", "SAVA"],
     datasets: [
-      { label: "Intervention par employé", data: [90, 75, 60, 80, 55], backgroundColor: "#57fa90" },
+      {
+        label: "Intervention par employé",
+        data: [90, 75, 60, 80, 55],
+        backgroundColor: "#57fa90",
+      },
     ],
   };
 
   const maintenanceParTechnicien = {
     labels: ["Analamanga", "Atsinanana", "Boeny", "Haute Matsiatra", "SAVA"],
     datasets: [
-      { label: "Maintenances par technicien", data: [3200, 1800, 1400, 2000, 1600], backgroundColor: "#ef4444" },
+      {
+        label: "Maintenances par technicien",
+        data: [3200, 1800, 1400, 2000, 1600],
+        backgroundColor: "#ef4444",
+      },
     ],
   };
 
@@ -216,9 +245,14 @@ const Dashboard: React.FC = () => {
         <ChartContainer title={`Demande intervention (${selectedYear})`}>
           <div style={{ marginBottom: 20 }}>
             <label style={{ marginRight: 10 }}>Année :</label>
-            <select value={selectedYear} onChange={(e) => setSelectedYear(Number(e.target.value))}>
+            <select
+              value={selectedYear}
+              onChange={(e) => setSelectedYear(Number(e.target.value))}
+            >
               {years.map((y) => (
-                <option key={y} value={y}>{y}</option>
+                <option key={y} value={y}>
+                  {y}
+                </option>
               ))}
             </select>
           </div>
@@ -238,11 +272,23 @@ const Dashboard: React.FC = () => {
         </ChartContainer>
 
         <ChartContainer title="Répartition par sexe">
-          <Pie data={repartitionSexe} options={{ ...smallChartOptions, plugins: { legend: { position: "bottom" } } }} />
+          <Pie
+            data={repartitionSexe}
+            options={{
+              ...smallChartOptions,
+              plugins: { legend: { position: "bottom" } },
+            }}
+          />
         </ChartContainer>
 
         <ChartContainer title="Répartition employé">
-          <Doughnut data={user} options={{ ...smallChartOptions, plugins: { legend: { position: "bottom" } } }} />
+          <Doughnut
+            data={user}
+            options={{
+              ...smallChartOptions,
+              plugins: { legend: { position: "bottom" } },
+            }}
+          />
         </ChartContainer>
       </div>
     </div>

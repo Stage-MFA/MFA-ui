@@ -31,14 +31,14 @@ export default function Home() {
     resolver: zodResolver(formSchema),
   });
 
-  useEffect(()=>{
+  useEffect(() => {
     router.prefetch(`${BASE_URL_FRONTEND}/inscription`);
     router.prefetch(`${BASE_URL_FRONTEND}/user/email`);
     router.prefetch(`${BASE_URL_FRONTEND}`);
     router.prefetch(`${BASE_URL_FRONTEND}/admin-ministere`);
     router.prefetch(`${BASE_URL_FRONTEND}/user-ministere`);
     router.prefetch(`${BASE_URL_FRONTEND}/technicien-ministere`);
-  }, [router])
+  }, [router]);
 
   const onSubmit = async (data: FormValues) => {
     setIsLoading(true);

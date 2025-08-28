@@ -137,7 +137,9 @@ export default function InterventionList() {
   };
 
   const handleEdit = (id: number) => {
-    router.prefetch(`/technicien-ministere/intervention/edit?interventionId=${id}`)
+    router.prefetch(
+      `/technicien-ministere/intervention/edit?interventionId=${id}`,
+    );
     alert(
       "Cette modification indique que votre intervention a débuté et que vous avez accepté la demande.",
     );
@@ -145,7 +147,9 @@ export default function InterventionList() {
   };
 
   const handleCreate = (id: number) => {
-    router.prefetch(`/technicien-ministere/maintenance/add?interventionId=${id}`)
+    router.prefetch(
+      `/technicien-ministere/maintenance/add?interventionId=${id}`,
+    );
     alert(
       "Pour clôturer cette intervention, vous devez effectuer une maintenance afin de garantir le bon état du matériel",
     );

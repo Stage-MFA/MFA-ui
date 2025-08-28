@@ -203,7 +203,9 @@ export default function MaintenancesList() {
   };
 
   const handleCreate = (id: number) => {
-    router.prefetch(`/technicien-ministere/maintenance/edit?maintenanceId=${id}`)
+    router.prefetch(
+      `/technicien-ministere/maintenance/edit?maintenanceId=${id}`,
+    );
     alert("Cette action vous permis de terminé cette maintenances");
     router.push(`/technicien-ministere/maintenance/edit?maintenanceId=${id}`);
   };
