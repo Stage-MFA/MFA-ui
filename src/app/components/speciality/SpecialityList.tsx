@@ -42,13 +42,14 @@ export default function SpecialityList() {
   }, []);
 
   const handleAddSpeciality = () => {
+    router.prefetch("/admin-ministere/speciality/add")
     router.push("/admin-ministere/speciality/add");
   };
 
   const handleEdit = (specialityId: number) => {
+    router.prefetch( `/admin-ministere/speciality/edit?specialityId=${specialityId}`)
     router.push(
-      `/admin-ministere/speciality/edit?specialityId=${specialityId}`,
-    );
+      `/admin-ministere/speciality/edit?specialityId=${specialityId}`);
   };
 
   const handleDelete = async (specialityId: number) => {

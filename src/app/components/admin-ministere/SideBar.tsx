@@ -96,7 +96,7 @@ const SideBar: React.FC = () => {
               })}
             >
               <FaHome />
-              <span>Dashboard</span>
+              <span>Tableau de bord</span>
             </Link>
           </li>
           <li>

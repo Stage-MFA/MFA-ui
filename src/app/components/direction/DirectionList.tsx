@@ -42,10 +42,12 @@ export default function DirectionList() {
   }, []);
 
   const handleAddDirection = () => {
+    router.prefetch("/admin-ministere/direction/add")
     router.push("/admin-ministere/direction/add");
   };
 
   const handleEdit = (directionId: number) => {
+    router.prefetch(`/admin-ministere/direction/edit?directionId=${directionId}`)
     router.push(`/admin-ministere/direction/edit?directionId=${directionId}`);
   };
 

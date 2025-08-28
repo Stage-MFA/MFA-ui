@@ -47,6 +47,7 @@ export default function Materials() {
   }, []);
 
   const handleAddMaterial = () => {
+    router.prefetch("/admin-ministere/material/add");
     router.push("/admin-ministere/material/add");
   };
 
@@ -99,6 +100,7 @@ export default function Materials() {
   };
 
   const handleEditMaterial = (materialId: number) => {
+    router.prefetch(`/admin-ministere/material/edit?materialId=${materialId}`)
     router.push(`/admin-ministere/material/edit?materialId=${materialId}`);
   };
 
