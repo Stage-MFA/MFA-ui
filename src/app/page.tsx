@@ -1,6 +1,6 @@
 "use client";
 import styles from "./style/page.module.css";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -30,6 +30,10 @@ export default function Home() {
   } = useForm<FormValues>({
     resolver: zodResolver(formSchema),
   });
+
+  useEffect(()=>{
+    router.prefetch(`${BASE_URL_FRONTEND}/admin-ministere`);
+  }, [router])
 
   const onSubmit = async (data: FormValues) => {
     setIsLoading(true);
