@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { BASE_URL_API } from "@/lib/constants";
+import { BASE_URL_API, BASE_URL_FRONTEND} from "@/lib/constants";
 import { FiEdit, FiTrash2, FiSearch, FiPlus } from "react-icons/fi";
 import styles from "@/app/style/user.module.css";
 import Swal from "sweetalert2";
@@ -29,6 +29,11 @@ export default function Users() {
   const [searchTerm, setSearchTerm] = useState("");
   const itemsPerPage = 8;
   const router = useRouter();
+
+  useEffect(() => {
+    router.prefetch(`${BASE_URL_FRONTEND}/user/add`);
+    router.prefetch(`${BASE_URL_API}/user/edit-role`);
+  }, [router]);
 
   useEffect(() => {
     async function fetchUsers() {
