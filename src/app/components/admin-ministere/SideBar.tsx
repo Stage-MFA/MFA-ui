@@ -152,6 +152,17 @@ const SideBar: React.FC = () => {
           </li>
           <li>
             <Link
+              href="/admin-ministere/intervention"
+              className={clsx(styles.menuItem, {
+                [styles.active]: pathname === "/admin-ministere/intervention",
+              })}
+            >
+              <FiTool />
+              <span>Intervention</span>
+            </Link>
+          </li>
+          <li>
+            <Link
               href="/admin-ministere/journal"
               className={clsx(styles.menuItem, {
                 [styles.active]: pathname === "/admin-ministere/journal",

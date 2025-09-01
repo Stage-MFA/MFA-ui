@@ -1,5 +1,5 @@
-import InterventionList from "@/app/components/intervention/InterventionList";
+import InterventionByUser from "@/app/components/intervention/InterventionByUser";
 
 export default function InterventionPage() {
-  return <InterventionList />;
+  return <InterventionByUser />;
 }

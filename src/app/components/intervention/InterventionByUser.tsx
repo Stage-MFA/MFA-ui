@@ -1,9 +1,18 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { BASE_URL_API } from "@/lib/constants";
-import { FiSearch, FiClock, FiLoader, FiCheckCircle } from "react-icons/fi";
+import {
+  FiEdit,
+  FiTrash2,
+  FiSearch,
+  FiClock,
+  FiLoader,
+  FiCheckCircle,
+} from "react-icons/fi";
 import styles from "@/app/style/user.module.css";
+import Swal from "sweetalert2";
 
 type Role = {
   id: number;
@@ -30,51 +39,39 @@ type Intervention = {
   interventionRequestId: number;
 };
 
-export default function InterventionList() {
+export default function InterventionByUser() {
   const [interventions, setInterventions] = useState<Intervention[]>([]);
   const [users, setUsers] = useState<User[]>([]);
+  const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("PENDING");
   const [selectedDate, setSelectedDate] = useState<string>("");
   const itemsPerPage = 6;
+  const router = useRouter();
 
   useEffect(() => {
-    async function fetchInterventions() {
-      try {
-        const res = await fetch(`${BASE_URL_API}/interventions`, {
-          method: "GET",
-          headers: { "Content-Type": "application/json" },
-          cache: "no-store",
-        });
-        if (!res.ok)
-          throw new Error("Erreur lors du chargement des interventions");
-        const data: Intervention[] = await res.json();
-        setInterventions(data);
-      } catch (error) {
-        console.error(error);
-      }
+    const email = sessionStorage.getItem("user");
+    if (email) {
+      fetch(`${BASE_URL_API}/users/email?email=${email}`)
+        .then((res) => res.json())
+        .then((data: User) => setCurrentUser(data))
+        .catch((err) => console.error(err));
     }
-    fetchInterventions();
   }, []);
 
   useEffect(() => {
-    async function fetchUsers() {
-      try {
-        const res = await fetch(`${BASE_URL_API}/users`, {
-          method: "GET",
-          headers: { "Content-Type": "application/json" },
-          cache: "no-store",
-        });
-        if (!res.ok)
-          throw new Error("Erreur lors du chargement des utilisateurs");
-        const data: User[] = await res.json();
-        setUsers(data);
-      } catch (error) {
-        console.error(error);
-      }
-    }
-    fetchUsers();
+    fetch(`${BASE_URL_API}/interventions`, { cache: "no-store" })
+      .then((res) => res.json())
+      .then((data: Intervention[]) => setInterventions(data))
+      .catch((err) => console.error(err));
+  }, []);
+
+  useEffect(() => {
+    fetch(`${BASE_URL_API}/users`, { cache: "no-store" })
+      .then((res) => res.json())
+      .then((data: User[]) => setUsers(data))
+      .catch((err) => console.error(err));
   }, []);
 
   const getUserName = (idUser: number) => {
@@ -120,26 +117,63 @@ export default function InterventionList() {
       case "IN_PROGRESS":
         return "En cours";
       case "FINISH":
-        return "Demande accépté";
+        return "Demande acceptée";
       default:
         return status;
     }
   };
 
+  const handleEdit = (id: number) => {
+    router.push(`/technicien-ministere/intervention/edit?interventionId=${id}`);
+  };
+
+  const handleCreate = (id: number) => {
+    router.push(`/technicien-ministere/maintenance/add?interventionId=${id}`);
+  };
+
+  const handleDelete = async (id: number) => {
+    const result = await Swal.fire({
+      title: "Êtes-vous sûr ?",
+      text: "Cette action est irréversible",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "Oui, supprimer",
+      cancelButtonText: "Annuler",
+    });
+    if (result.isConfirmed) {
+      try {
+        const res = await fetch(`${BASE_URL_API}/interventions/${id}`, {
+          method: "DELETE",
+          headers: { "Content-Type": "application/json" },
+        });
+        if (!res.ok) throw new Error("Erreur lors de la suppression");
+        setInterventions((prev) => prev.filter((i) => i.interventionId !== id));
+        Swal.fire("Supprimé !", "L'intervention a été supprimée.", "success");
+      } catch (error) {
+        Swal.fire(
+          "Erreur",
+          "Une erreur est survenue lors de la suppression.",
+          "error",
+        );
+        console.log(error);
+      }
+    }
+  };
+
   const filteredInterventions = interventions.filter((inter) => {
+    const isMine = currentUser ? inter.usersId === currentUser.id : false;
     const matchesSearch = inter.description
       .toLowerCase()
       .includes(searchTerm.toLowerCase());
-
     const matchesStatus =
       statusFilter === "ALL" || inter.status.toUpperCase() === statusFilter;
-
     const matchesDate = selectedDate
       ? new Date(inter.dateIntervention).toDateString() ===
         new Date(selectedDate).toDateString()
       : true;
-
-    return matchesSearch && matchesStatus && matchesDate;
+    return isMine && matchesSearch && matchesStatus && matchesDate;
   });
 
   const totalPages = Math.ceil(filteredInterventions.length / itemsPerPage);
@@ -178,20 +212,7 @@ export default function InterventionList() {
               setSelectedDate(e.target.value);
               setCurrentPage(1);
             }}
-            style={{
-              padding: "8px 12px",
-              borderRadius: "10px",
-              border: "1px solid #ccc",
-              color: "#9e9b9bff",
-              fontSize: "14px",
-              fontWeight: 500,
-              outline: "none",
-              cursor: "pointer",
-              transition: "all 0.3s ease",
-              marginTop: "20px",
-            }}
-            onFocus={(e) => (e.target.style.borderColor = "#0070f3")}
-            onBlur={(e) => (e.target.style.borderColor = "#ccc")}
+            className={styles.filterDate}
           />
         </div>
         <div>
@@ -205,7 +226,7 @@ export default function InterventionList() {
           >
             <option value="PENDING">En attente</option>
             <option value="IN_PROGRESS">En cours</option>
-            <option value="FINISH">Accépté</option>
+            <option value="FINISH">Acceptée</option>
           </select>
         </div>
       </div>
@@ -218,6 +239,9 @@ export default function InterventionList() {
             <th className={styles.th}>Direction</th>
             <th className={styles.th}>Description</th>
             <th className={styles.th}>Statut</th>
+            {(statusFilter === "PENDING" || statusFilter === "IN_PROGRESS") && (
+              <th className={styles.th}>Actions</th>
+            )}
           </tr>
         </thead>
         <tbody>
@@ -242,6 +266,37 @@ export default function InterventionList() {
                   {statusIcon(inter.status)}
                   {translateStatus(inter.status)}
                 </span>
+              </td>
+              <td className={styles.td}>
+                <div className={styles.actions}>
+                  {statusFilter === "PENDING" && (
+                    <button
+                      className={`${styles.actionBtn} ${styles.edit}`}
+                      onClick={() => handleEdit(inter.interventionId)}
+                      title="Modifier"
+                    >
+                      <FiEdit size={18} />
+                    </button>
+                  )}
+                  {statusFilter === "IN_PROGRESS" && (
+                    <button
+                      className={`${styles.actionBtn} ${styles.edit}`}
+                      onClick={() => handleCreate(inter.interventionId)}
+                      title="Clôturer"
+                    >
+                      <FiEdit size={18} />
+                    </button>
+                  )}
+                  {inter.status.toUpperCase() === "PENDING" && (
+                    <button
+                      className={`${styles.actionBtn} ${styles.delete}`}
+                      onClick={() => handleDelete(inter.interventionId)}
+                      title="Supprimer"
+                    >
+                      <FiTrash2 size={18} />
+                    </button>
+                  )}
+                </div>
               </td>
             </tr>
           ))}
