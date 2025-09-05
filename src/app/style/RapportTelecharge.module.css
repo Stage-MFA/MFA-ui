@@ -44,7 +44,7 @@
 }
 .input:focus,
 .select:focus {
-  ring: 2px;
+  margin: 2px;
   border-color: #3b82f6;
 }
 
