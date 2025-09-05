@@ -1,0 +1,85 @@
+.card {
+  height: 280px;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  background: #fff;
+  border-radius: 1rem;
+  box-shadow: 0 2px 8px #2563eb11;
+  transition: all 0.3s ease;
+}
+.card:hover {
+  box-shadow: 0 6px 16px #2563eb33;
+  transform: translateY(-5px) scale(1.02);
+}
+
+.cardTitle {
+  font-size: 1rem;
+  font-weight: bold;
+  color: #272729;
+  margin-bottom: 0.5rem;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 0.5rem;
+}
+
+.label {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #374151;
+  margin-bottom: 0.25rem;
+}
+
+.input,
+.select {
+  border: 1px solid #bfdbfe;
+  border-radius: 0.5rem;
+  padding: 0.25rem 0.5rem;
+  outline: none;
+  font-size: 0.875rem;
+}
+.input:focus,
+.select:focus {
+  ring: 2px;
+  border-color: #3b82f6;
+}
+
+.dynamicFields {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.flexRow {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.grid2 {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.5rem;
+}
+
+.button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.25rem;
+  background: linear-gradient(135deg, #eff0f1, #42f183, #fbbf24, #f36868);
+  color: #fff;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: none;
+}
+.button:hover {
+  filter: brightness(1.1);
+}

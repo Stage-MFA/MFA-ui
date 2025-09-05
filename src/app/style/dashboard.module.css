@@ -8,40 +8,59 @@
 .grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 1.5rem;
+  gap: 1rem;
 }
 
 .chartContainer {
   background: #fff;
   border-radius: 1rem;
-  padding: 1rem;
+  padding: 0.5rem;
   box-shadow: 0 2px 8px #2563eb11;
-  height: 280px;
+  height: 278px;
 }
 
 .chartTitle {
   font-size: 1rem;
+  font-weight: bold;
+  color: #272729;
   margin-bottom: 0.5rem;
 }
 
 .chartContent {
   height: 200px;
 }
-
-.card {
+.cards {
   background: #fff;
   border-radius: 1rem;
-  padding: 1rem;
+  padding: 0.5rem;
   box-shadow: 0 2px 8px #2563eb11;
+  height: 260px;
+}
+.cards:hover {
+  box-shadow: 0 6px 16px #2563eb33;
+  transform: translateY(-5px) scale(1.02);
+}
+.chartContainer:hover {
+  box-shadow: 0 6px 16px #2563eb33;
+  transform: translateY(-5px) scale(1.02);
+}
+.cardTitle {
   display: flex;
-  flex-direction: column;
-  justify-content: center;
+  flex-direction: row;
   align-items: center;
-  height: 150px;
+  font-size: 1rem;
+  margin-bottom: 0.5rem;
+  font-size: 1rem;
+  font-weight: bold;
+  color: #272729;
 }
 
-.cardTitle {
-  font-size: 1rem;
+.cardContent {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  margin-top: 40px;
+  gap: 20px;
   color: #6b7280;
 }
 
@@ -49,4 +68,63 @@
   font-size: 2rem;
   font-weight: bold;
   color: #ef4444;
+}
+
+.cardValues {
+  font-size: 2rem;
+  font-weight: bold;
+  background: linear-gradient(
+    135deg,
+    #3b82f6,
+    #16a34a,
+    #fbbf24,
+    #ef4444
+  ); /* bleu → vert → jaune → rouge */
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.cardIcons {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 5px;
+}
+
+.icon {
+  font-size: 15 px;
+}
+
+.waiting {
+  color: #f59e0b;
+}
+
+.inProgress {
+  color: #2563eb;
+}
+
+.finished {
+  color: #16a34a;
+}
+
+.skeleton {
+  background: linear-gradient(90deg, #f3f4f6 25%, #e5e7eb 50%, #f3f4f6 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: 1rem;
+}
+
+.skeletonCard {
+  height: 260px;
+}
+
+.skeletonChart {
+  height: 278px;
+}
+
+@keyframes shimmer {
+  100% {
+    background-position: -200% 0;
+  }
 }
