@@ -2,6 +2,8 @@ import { useState } from "react";
 import { FiDownload } from "react-icons/fi";
 import { BASE_URL_API } from "@/lib/constants";
 import styles from "@/app/style/RapportTelecharge.module.css";
+import { generateDailyReportExcel } from "./generateDailyReportExcel";
+import { StatsResponse } from "./types";
 
 const RapportTelecharge: React.FC = () => {
   const [method, setMethod] = useState("jour");
@@ -17,11 +19,11 @@ const RapportTelecharge: React.FC = () => {
     new Date().getFullYear().toString(),
   );
 
-  const handleDownload = () => {
+  const handleDownload = async () => {
     let url = "";
     switch (method) {
       case "jour":
-        url = `${BASE_URL_API}/rapport/jour?date=${dateUnique}`;
+        url = `${BASE_URL_API}/stats?date=${dateUnique}`;
         break;
       case "intervalle":
         url = `${BASE_URL_API}/rapport/intervalle?debut=${dateDebut}&fin=${dateFin}`;
@@ -33,7 +35,15 @@ const RapportTelecharge: React.FC = () => {
         url = `${BASE_URL_API}/rapport/trimestre?trimestre=${trimestre}&annee=${anneeTrim}`;
         break;
     }
-    window.open(url, "_blank");
+
+    try {
+      const res = await fetch(url);
+      if (!res.ok) throw new Error("Erreur API");
+      const data: StatsResponse = await res.json();
+      await generateDailyReportExcel(data);
+    } catch (err) {
+      console.error("Erreur lors du téléchargement du rapport :", err);
+    }
   };
 
   return (

@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import styles from "@/app/style/dashboard.module.css";
 import { Pie, Line, Doughnut } from "react-chartjs-2";
 import { BASE_URL_API, BASE_URL_FRONTEND } from "@/lib/constants";
-import RapportTelecharge from "../animation/Rapport";
+import RapportTelecharge from "../stats/Rapport";
 import { FiClock, FiLoader, FiCheckCircle } from "react-icons/fi";
 import AnimatedNumber from "../animation/Animation";
 import {
