@@ -26,13 +26,22 @@ const RapportTelecharge: React.FC = () => {
         url = `${BASE_URL_API}/stats?date=${dateUnique}`;
         break;
       case "intervalle":
-        url = `${BASE_URL_API}/rapport/intervalle?debut=${dateDebut}&fin=${dateFin}`;
+        url = `${BASE_URL_API}/stats/betweenDates?startDate=${dateDebut}&endDate=${dateFin}`;
         break;
       case "mois":
-        url = `${BASE_URL_API}/rapport/mois?mois=${mois}&annee=${anneeMois}`;
+        url = `${BASE_URL_API}/stats/month?year=${anneeMois}&month=${mois}`;
         break;
       case "trimestre":
-        url = `${BASE_URL_API}/rapport/trimestre?trimestre=${trimestre}&annee=${anneeTrim}`;
+        const trimestreNumber = parseInt(trimestre, 10);
+        if (
+          isNaN(trimestreNumber) ||
+          trimestreNumber < 1 ||
+          trimestreNumber > 4
+        ) {
+          console.error("Invalid trimester value");
+          return;
+        }
+        url = `${BASE_URL_API}/stats/trimester?year=${anneeTrim}&trimester=${trimestreNumber}`;
         break;
     }
 
