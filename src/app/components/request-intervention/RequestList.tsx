@@ -327,7 +327,12 @@ export default function RequestList() {
               <td className={styles.td}>
                 {request.materials.map((m) => m.name).join(", ")}
               </td>
-              <td className={styles.td}>{request.description}</td>
+              <td className={styles.td}>
+                <div
+                  dangerouslySetInnerHTML={{ __html: request.description }}
+                  className={styles.richTextDisplay}
+                />
+              </td>
               <td className={styles.td}>
                 <span
                   className={`${styles.badge} ${statusClass(request.status)}`}

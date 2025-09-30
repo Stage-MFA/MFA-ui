@@ -2,7 +2,8 @@
 import { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { z } from "zod";
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
+import RichTextEditor from "../textaria/RichTextEditor";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { BASE_URL_API } from "@/lib/constants";
 import styles from "@/app/style/createUser.module.css";
@@ -116,6 +117,7 @@ export default function CreateIntervention() {
   const {
     register,
     handleSubmit,
+    control,
     formState: { errors },
   } = useForm<FormValuesIntervention>({
     resolver: zodResolver(formSchemaIntervention),
@@ -220,10 +222,12 @@ export default function CreateIntervention() {
             </div>
           </div>
           <label className={styles.label}>Description</label>
-          <textarea
-            {...register("description")}
-            className={styles.input}
-            rows={7}
+          <Controller
+            name="description"
+            control={control}
+            render={({ field }) => (
+              <RichTextEditor value={field.value} onChange={field.onChange} />
+            )}
           />
           {errors.description && (
             <p className={styles.error}>{errors.description.message}</p>

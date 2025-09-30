@@ -1,1 +1,20 @@
 @import "tailwindcss";
+/* TinyMCE menus et popups au-dessus du formulaire */
+.tox-tinymce-aux,
+.tox-silver-sink,
+.tox,
+.tox-editor-header,
+.tox-toolbar__primary,
+.tox-toolbar__overflow,
+.tox-toolbar__button,
+.tox-menu,
+.tox-menu__item {
+  z-index: 10000 !important; /* au-dessus du wrapper */
+}
+
+/* Optionnel : augmenter le z-index des popups */
+.tox-dialog,
+.tox-dialog__body,
+.tox-dialog__footer {
+  z-index: 11000 !important;
+}

@@ -4,7 +4,8 @@ import { useEffect, useState } from "react";
 import { BASE_URL_API } from "@/lib/constants";
 import { useRouter, useSearchParams } from "next/navigation";
 import { z } from "zod";
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
+import RichTextEditor from "../textaria/RichTextEditor";
 import { zodResolver } from "@hookform/resolvers/zod";
 import styles from "@/app/style/createUser.module.css";
 import Image from "next/image";
@@ -67,6 +68,7 @@ export default function CreateMaintenance() {
   const {
     register,
     handleSubmit,
+    control,
     formState: { errors },
   } = useForm<formSchemaType>({
     resolver: zodResolver(formSchema),
@@ -158,10 +160,15 @@ export default function CreateMaintenance() {
               )}
 
               <label className={styles.label}>Description</label>
-              <textarea
-                {...register("description")}
-                className={styles.input}
-                rows={4}
+              <Controller
+                name="description"
+                control={control}
+                render={({ field }) => (
+                  <RichTextEditor
+                    value={field.value}
+                    onChange={field.onChange}
+                  />
+                )}
               />
               {errors.description && (
                 <p className={styles.error}>{errors.description.message}</p>

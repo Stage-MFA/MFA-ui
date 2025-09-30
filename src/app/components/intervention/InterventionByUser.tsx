@@ -258,7 +258,12 @@ export default function InterventionByUser() {
               </td>
               <td className={styles.td}>{getUserName(inter.usersId)}</td>
               <td className={styles.td}>{getDirection(inter.usersId)}</td>
-              <td className={styles.td}>{inter.description}</td>
+              <td className={styles.td}>
+                <div
+                  dangerouslySetInnerHTML={{ __html: inter.description }}
+                  className={styles.richTextDisplay}
+                />
+              </td>
               <td className={styles.td}>
                 <span
                   className={`${styles.badge} ${statusClass(inter.status)}`}

@@ -289,7 +289,12 @@ export default function MaintenancesList() {
                 <td className={styles.td}>
                   {intervention ? getUserName(intervention.usersId) : "-"}
                 </td>
-                <td className={styles.td}>{mnt.description || "-"}</td>
+                <td className={styles.td}>
+                  <div
+                    dangerouslySetInnerHTML={{ __html: mnt.description || "-" }}
+                    className={styles.richTextDisplay}
+                  />
+                </td>
                 <td className={styles.td}>
                   <span
                     className={`${styles.badge} ${statusClass(mnt.status)}`}

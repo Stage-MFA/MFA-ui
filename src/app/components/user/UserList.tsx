@@ -27,7 +27,7 @@ export default function Users() {
   const [users, setUsers] = useState<User[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
-  const itemsPerPage = 8;
+  const itemsPerPage = 6;
   const router = useRouter();
 
   useEffect(() => {

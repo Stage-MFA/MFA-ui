@@ -1,0 +1,13 @@
+.editorWrapper {
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  background-color: #ffffff;
+  max-width: 100%;
+  transition: box-shadow 0.2s ease-in-out;
+}
+
+.editorWrapper:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}

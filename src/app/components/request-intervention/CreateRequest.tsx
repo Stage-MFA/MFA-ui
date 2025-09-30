@@ -2,12 +2,13 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { z } from "zod";
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { BASE_URL_API } from "@/lib/constants";
-import styles from "@/app/style/createUser.module.css";
+import styles from "@/app/style/createRequest.module.css";
 import Image from "next/image";
 import { FaArrowLeft } from "react-icons/fa";
+import RichTextEditor from "../textaria/RichTextEditor";
 
 type Material = {
   materialId: number;
@@ -61,6 +62,7 @@ export default function CreateRequestIntervention() {
     formState: { errors },
     setValue,
     watch,
+    control,
   } = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -75,7 +77,7 @@ export default function CreateRequestIntervention() {
 
   const getLocalDateTime = () => {
     const now = new Date();
-    const tzOffset = now.getTimezoneOffset() * 60000; // en ms
+    const tzOffset = now.getTimezoneOffset() * 60000;
     const localISOTime = new Date(now.getTime() - tzOffset)
       .toISOString()
       .slice(0, 16);
@@ -206,10 +208,15 @@ export default function CreateRequestIntervention() {
               )}
 
               <label className={styles.label}>Description</label>
-              <textarea
-                {...register("description")}
-                className={styles.input}
-                rows={7}
+              <Controller
+                name="description"
+                control={control}
+                render={({ field }) => (
+                  <RichTextEditor
+                    value={field.value}
+                    onChange={field.onChange}
+                  />
+                )}
               />
               {errors.description && (
                 <p className={styles.error}>{errors.description.message}</p>
