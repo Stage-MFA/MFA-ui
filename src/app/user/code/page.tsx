@@ -5,7 +5,6 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
-import Cookies from "js-cookie";
 import { BASE_URL_FRONTEND } from "@/lib/constants";
 import Image from "next/image";
 
@@ -21,15 +20,17 @@ type FormValues = z.infer<typeof codeSchema>;
 export default function CodePage() {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
-
-  const codeNow = Cookies.get("code");
+  const [codeNow, setCodeNow] = useState<string | null>(null);
 
   useEffect(() => {
-    if (!codeNow) {
+    const storedCode = sessionStorage.getItem("code");
+    if (!storedCode) {
       alert("Aucun code trouvé, veuillez vous reconnecter.");
       router.push("/");
+    } else {
+      setCodeNow(storedCode);
     }
-  }, [codeNow, router]);
+  }, [router]);
 
   const {
     register,

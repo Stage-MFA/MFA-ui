@@ -5,7 +5,6 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
-import Cookies from "js-cookie";
 import { BASE_URL_FRONTEND, BASE_URL_API } from "@/lib/constants";
 import Image from "next/image";
 import emailjs from "@emailjs/browser";
@@ -63,10 +62,11 @@ export default function Home() {
         throw new Error("Réponse incomplète");
       }
 
-      Cookies.set("accessToken", accessToken, { expires: 1 });
-      Cookies.set("refreshToken", refreshToken, { expires: 7 });
-      Cookies.set("code", code, { expires: 1 });
-      Cookies.set("user", data.email, { expires: 1 });
+      
+      sessionStorage.setItem("accessToken", accessToken);
+      sessionStorage.setItem("refreshToken", refreshToken);
+      sessionStorage.setItem("code", code);
+      sessionStorage.setItem("user", data.email);
 
       await sendEmailCode(data.email, code);
 
