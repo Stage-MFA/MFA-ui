@@ -62,7 +62,6 @@ export default function Home() {
         throw new Error("Réponse incomplète");
       }
 
-      
       sessionStorage.setItem("accessToken", accessToken);
       sessionStorage.setItem("refreshToken", refreshToken);
       sessionStorage.setItem("code", code);
